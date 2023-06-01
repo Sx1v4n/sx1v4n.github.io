@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Pages on S.x1v4n</title>
+        <link>https://sx1v4n.github.io/page/</link>
+        <description>Recent content in Pages on S.x1v4n</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>es</language>
+        <lastBuildDate>Sun, 06 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://sx1v4n.github.io/page/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Archivo</title>
+        <link>https://sx1v4n.github.io/archivos/</link>
+        <pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate>
+        
+        <guid>https://sx1v4n.github.io/archivos/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title></title>
+        <link>https://sx1v4n.github.io/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://sx1v4n.github.io/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Search</title>
+        <link>https://sx1v4n.github.io/search/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://sx1v4n.github.io/search/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Whoami</title>
+        <link>https://sx1v4n.github.io/whoami/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://sx1v4n.github.io/whoami/</guid>
+        <description>&lt;p&gt;Mi nombre es Iván (aka. S.x1v4n), actualmente estoy estudiando ciberseguridad, me gusta tanto el pentesting como el reversing, este es un blog donde iré subiendo artículos relacionados.&lt;/p&gt;
+&lt;p&gt;My name is Iván (aka. S.x1v4n), I am currently studying cybersecurity, I like both pentesting and reversing, this is a blog where I will upload related articles.&lt;/p&gt;
+&lt;h2 id=&#34;certifications&#34;&gt;Certifications&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;eJPTv2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;developed-tools&#34;&gt;Developed tools&lt;/h2&gt;
+&lt;p&gt;Script en Python que “acelera” el proceso de tener que buscar una reverse shell, teniendo todas en un único binario.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/Sx1v4n/Auto-Reverse-Shell&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;AutoShell&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        </item>
+        <item>
+        <title>WriteUps</title>
+        <link>https://sx1v4n.github.io/writeups/</link>
+        <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+        
+        <guid>https://sx1v4n.github.io/writeups/</guid>
+        <description>&lt;h2 id=&#34;hackthebox&#34;&gt;HackTheBox&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Difficult&lt;/th&gt;
+&lt;th&gt;System&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a class=&#34;link&#34; href=&#34;https://sx1v4n.github.io/p/precious-htb&#34; &gt;Precious&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Easy&lt;/td&gt;
+&lt;td&gt;Linux&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a class=&#34;link&#34; href=&#34;https://sx1v4n.github.io/p/irked-htb/&#34; &gt;Irked&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Easy&lt;/td&gt;
+&lt;td&gt;Linux&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;tryhackme&#34;&gt;TryHackMe&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Difficult&lt;/th&gt;
+&lt;th&gt;System&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a class=&#34;link&#34; href=&#34;https://sx1v4n.github.io/p/blog-thm&#34; &gt;Blog&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Medium&lt;/td&gt;
+&lt;td&gt;Linux&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a class=&#34;link&#34; href=&#34;https://sx1v4n.github.io/p/brainpain-thm/&#34; &gt;Brainpain&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;!-- raw HTML omitted --&gt;Hard&lt;!-- raw HTML omitted --&gt;&lt;/td&gt;
+&lt;td&gt;Windows&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

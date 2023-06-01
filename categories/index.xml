@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Categories on S.x1v4n</title>
+        <link>https://sx1v4n.github.io/categories/</link>
+        <description>Recent content in Categories on S.x1v4n</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>es</language>
+        <lastBuildDate>Mon, 29 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://sx1v4n.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>TryHackMe</title>
+        <link>https://sx1v4n.github.io/categories/try-hack-me/</link>
+        <pubDate>Mon, 29 May 2023 00:00:00 +0000</pubDate>
+        
+        <guid>https://sx1v4n.github.io/categories/try-hack-me/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Unpacking</title>
+        <link>https://sx1v4n.github.io/categories/unpacking/</link>
+        <pubDate>Sun, 23 Apr 2023 00:00:00 +0000</pubDate>
+        
+        <guid>https://sx1v4n.github.io/categories/unpacking/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>HackTheBox</title>
+        <link>https://sx1v4n.github.io/categories/hack-the-box/</link>
+        <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
+        
+        <guid>https://sx1v4n.github.io/categories/hack-the-box/</guid>
+        <description></description>
+        </item>
+        
+    </channel>
+</rss>
