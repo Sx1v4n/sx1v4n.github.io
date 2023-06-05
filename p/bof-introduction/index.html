@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Conceptos fundamentales para Buffer overflow.'>
+<title>Introducción a Buffer overflow</title>
+
+<link rel='canonical' href='https://sx1v4n.github.io/p/bof-introduction/'>
+
+<link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='Introducción a Buffer overflow'>
+<meta property='og:description' content='Conceptos fundamentales para Buffer overflow.'>
+<meta property='og:url' content='https://sx1v4n.github.io/p/bof-introduction/'>
+<meta property='og:site_name' content='S.x1v4n'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-06-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2023-06-01T00:00:00&#43;00:00'/><meta property='og:image' content='https://sx1v4n.github.io/p/bof-introduction/logo.png' />
+<meta name="twitter:title" content="Introducción a Buffer overflow">
+<meta name="twitter:description" content="Conceptos fundamentales para Buffer overflow."><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://sx1v4n.github.io/p/bof-introduction/logo.png' />
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "dark");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/logo_hude82ea7f464a850aa72eb63e992f12f3_89784_300x0_resize_q75_box.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">S.x1v4n</a></h1>
+            <h2 class="site-description">Jr Penetration Tester / eJPTv2</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/Sx1v4n'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0"?><svg fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="50px" height="50px">    <path d="M17.791,46.836C18.502,46.53,19,45.823,19,45v-5.4c0-0.197,0.016-0.402,0.041-0.61C19.027,38.994,19.014,38.997,19,39 c0,0-3,0-3.6,0c-1.5,0-2.8-0.6-3.4-1.8c-0.7-1.3-1-3.5-2.8-4.7C8.9,32.3,9.1,32,9.7,32c0.6,0.1,1.9,0.9,2.7,2c0.9,1.1,1.8,2,3.4,2 c2.487,0,3.82-0.125,4.622-0.555C21.356,34.056,22.649,33,24,33v-0.025c-5.668-0.182-9.289-2.066-10.975-4.975 c-3.665,0.042-6.856,0.405-8.677,0.707c-0.058-0.327-0.108-0.656-0.151-0.987c1.797-0.296,4.843-0.647,8.345-0.714 c-0.112-0.276-0.209-0.559-0.291-0.849c-3.511-0.178-6.541-0.039-8.187,0.097c-0.02-0.332-0.047-0.663-0.051-0.999 c1.649-0.135,4.597-0.27,8.018-0.111c-0.079-0.5-0.13-1.011-0.13-1.543c0-1.7,0.6-3.5,1.7-5c-0.5-1.7-1.2-5.3,0.2-6.6 c2.7,0,4.6,1.3,5.5,2.1C21,13.4,22.9,13,25,13s4,0.4,5.6,1.1c0.9-0.8,2.8-2.1,5.5-2.1c1.5,1.4,0.7,5,0.2,6.6c1.1,1.5,1.7,3.2,1.6,5 c0,0.484-0.045,0.951-0.11,1.409c3.499-0.172,6.527-0.034,8.204,0.102c-0.002,0.337-0.033,0.666-0.051,0.999 c-1.671-0.138-4.775-0.28-8.359-0.089c-0.089,0.336-0.197,0.663-0.325,0.98c3.546,0.046,6.665,0.389,8.548,0.689 c-0.043,0.332-0.093,0.661-0.151,0.987c-1.912-0.306-5.171-0.664-8.879-0.682C35.112,30.873,31.557,32.75,26,32.969V33 c2.6,0,5,3.9,5,6.6V45c0,0.823,0.498,1.53,1.209,1.836C41.37,43.804,48,35.164,48,25C48,12.318,37.683,2,25,2S2,12.318,2,25 C2,35.164,8.63,43.804,17.791,46.836z"/></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://www.linkedin.com/in/ivan-romero-capita-a56838256/'
+                        target="_blank"
+                        title="Linkedin"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path fill="#0288D1" d="M42,37c0,2.762-2.238,5-5,5H11c-2.761,0-5-2.238-5-5V11c0-2.762,2.239-5,5-5h26c2.762,0,5,2.238,5,5V37z"/><path fill="#FFF" d="M12 19H17V36H12zM14.485 17h-.028C12.965 17 12 15.888 12 14.499 12 13.08 12.995 12 14.514 12c1.521 0 2.458 1.08 2.486 2.499C17 15.887 16.035 17 14.485 17zM36 36h-5v-9.099c0-2.198-1.225-3.698-3.192-3.698-1.501 0-2.313 1.012-2.707 1.99C24.957 25.543 25 26.511 25 27v9h-5V19h5v2.616C25.721 20.5 26.85 19 29.738 19c3.578 0 6.261 2.25 6.261 7.274L36 36 36 36z"/></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Inicio</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/resources/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-book-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M19 4v16h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12z" />
+  <path d="M19 16h-12a2 2 0 0 0 -2 2" />
+  <path d="M9 8h6" />
+</svg>
+
+
+
+                
+                <span>Resources</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/writeups/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M336 64h32a48 48 0 0148 48v320a48 48 0 01-48 48H144a48 48 0 01-48-48V112a48 48 0 0148-48h32" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><rect x="176" y="32" width="160" height="64" rx="26.13" ry="26.13" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
+                
+                <span>WriteUps</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/whoami/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></svg>
+                
+                <span>Whoami</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archivos/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archivo</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#introducción">Introducción</a></li>
+    <li><a href="#qué-es-un-buffer">¿Qué es un Buffer?</a></li>
+    <li><a href="#qué-es-un-registro">¿Qué es un registro?</a>
+      <ol>
+        <li><a href="#registros-de-cpu">Registros de CPU</a></li>
+      </ol>
+    </li>
+    <li><a href="#little-indian-y-big-indian">Little Indian y Big Indian</a></li>
+    <li><a href="#qué-es-un-buffer-overflow">¿Qué es un Buffer Overflow?</a>
+      <ol>
+        <li><a href="#tipos-de-buffer-overflow">Tipos de Buffer Overflow</a></li>
+        <li><a href="#diferencias-entre-stack-y-heap">Diferencias entre Stack y Heap</a></li>
+      </ol>
+    </li>
+    <li><a href="#prevención">Prevención</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/bof-introduction/">
+                <img src="/p/bof-introduction/logo.png"
+                        
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Introducción a Buffer overflow" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/resources/" style="background-color: #9f308d; color: #fff;">
+                Resources
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/bof-introduction/">Introducción a Buffer overflow</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Conceptos fundamentales para Buffer overflow.
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jun 01, 2023</time>
+            </div>
+        
+
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="introducción">Introducción</h2>
+<p>El desbordamiento de memoria de búfer se remontan a la  década de 1970, sin embargo hasta finales de los 80 no se produjo el primer ataque de este tipo, el servicio
+&ldquo;finger&rdquo; de UNIX fue el explotado mediante el desbordamiento de pila.</p>
+<p>Los desbordamientos de búfer se siguen produciendo en aplicaciones de software, y su explotación puede depender de muchos factores, ya sea de las opciones de los compiladores o
+la seguridad del sistema operativo.</p>
+<h2 id="qué-es-un-buffer">¿Qué es un Buffer?</h2>
+<p>Un buffer es un espacio temporal de memoria fisica que se usa para almacenar información mientras está se envia de un lado a otro. Es una respuesta rápida que se
+utiliza para optimizar un proceso de transferencia de datos, estos suelen estar en la memoria RAM.
+Los búferes estan diseñados para poder contener una cantidad específica de datos, si el programa no tiene una instrucción incoporada, lo datos se sobrescribiran en los datos de la memoria adyacente al búfer.</p>
+<h2 id="qué-es-un-registro">¿Qué es un registro?</h2>
+<p>La definición más simple de un registro es entenderlo como si fuera variable. Es un región de memoria en la que podemos almacenar y leer datos. La diferencia con las variables que nosotros definimos es que lo registros sirven de un próposito concreto y son limitados. Un registro puede variar según la arquitectura de CPU pueden ser de 32 bits o 64 bits.</p>
+<h3 id="registros-de-cpu">Registros de CPU</h3>
+<p>Según la arquitectura hay nomenclaturas diferentes para cada registro:</p>
+<ul>
+<li>Registros de 64 bits: RAX, RBC, RCX, RDX, RSI, RDI, RBP, RSP</li>
+<li>Registros de 16 bits: AX, BX, CX, DX, SI, DI, BP, SP, IP</li>
+<li>Registros de 8bits: AH, AL, BH, BL, CH, CL, DH, DL</li>
+</ul>
+<p>En este caso nos centraremos en los registros de 32 bits.</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th>Nomenclatura</th>
+<th>Nombre Completo</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EIP</td>
+<td>Extended Stack Pointer</td>
+<td>Es la siguiente dirección de memoria que se debería ejecutar.</td>
+</tr>
+<tr>
+<td>EAX</td>
+<td>Extended Accumulator Register</td>
+<td>Almacena de forma temporal cualquier dirección de retorno.</td>
+</tr>
+<tr>
+<td>ESI</td>
+<td>Extended Source Index</td>
+<td>Contiene la dirección de memoria de los datos de entrada.</td>
+</tr>
+<tr>
+<td>EBX</td>
+<td>Extended Base Register</td>
+<td>Almacena datos y direcciones de memoria.</td>
+</tr>
+<tr>
+<td>ESP</td>
+<td>Extended Stack Pointer</td>
+<td>Se usa para referenciar el inicio de un hilo.</td>
+</tr>
+<tr>
+<td>EBP</td>
+<td>Extended Base Pointer</td>
+<td>Indica la dirección de memoria del final de un hilo.</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="little-indian-y-big-indian">Little Indian y Big Indian</h2>
+<p>Son dos estilos diferentes de almacenar los datos en memoria.</p>
+<p>En <strong>little Indian</strong>, el byte significativo más pequeño se almacena en la dirección más baja o la primera, mientras que el byte significativo más grande se almacena en la dirección más alta. Basícamente el byte más pequeño se almacena el primero y el byte más alto se almacena el último.</p>
+<p>En <strong>Big Indian</strong>,el byte más significativo se almacena en la dirección más baja (o primera), y el byte menos significativo se almancena en la dirección más alta.</p>
+<p><img src="/p/bof-introduction/2.png"
+	width="906"
+	height="418"
+	srcset="/p/bof-introduction/2_hu9dd1c9d163e37a96e4d673099296648e_12632_480x0_resize_box_3.png 480w, /p/bof-introduction/2_hu9dd1c9d163e37a96e4d673099296648e_12632_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="216"
+		data-flex-basis="520px"
+	
+></p>
+<h2 id="qué-es-un-buffer-overflow">¿Qué es un Buffer Overflow?</h2>
+<p>Un Buffer overflow también conocido como desborde de memoria, se produce cuando
+un programa excede el uso de cantidad de memoria asignada, lo cual provoca que los datos de entrada ocupen zonas de memoria adyacentes,
+donde se podria ejecutar código.</p>
+<p>La explotación de esta vulnerabilidad se centra en sobrescribir la dirección de retorno (EIP). De esta forma se puede redirigir el flujo de ejecucción del programa
+haciendo que pueda ir a un código desarrollado por el atacante, también se podría producir un ataque de denegación de servicio.</p>
+<p><img src="/p/bof-introduction/3.png"
+	width="605"
+	height="186"
+	srcset="/p/bof-introduction/3_hu050409e5c5a8b57365f82a81b8b1d61e_8134_480x0_resize_box_3.png 480w, /p/bof-introduction/3_hu050409e5c5a8b57365f82a81b8b1d61e_8134_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="325"
+		data-flex-basis="780px"
+	
+></p>
+<h3 id="tipos-de-buffer-overflow">Tipos de Buffer Overflow</h3>
+<ul>
+<li>
+<p><strong>Stack overflow</strong>: El desbordamiento de pila es un tipo de error que se produce cuando un programa informático intenta usar más espacio de memoria en la pila del que está asignado.La pila
+de llamadas , denominada &ldquo;segmento de pila&rdquo; es un búfer de tamaño fijo que almacena variables y funciones locales y datos de dedirección de retorno durante la ejecucción.
+La pila de llamadas se adhiere a un tipo de arquitectura de último en entrar, primero en salir (LIFO). Cada función tiene su marco de pila, esto se añade a la parte superior de la pila de llamadas.Este marco de pila permanece en la memoria hasta que la función termine de ejecutarse, liberando así memoria para otros marcos de pila. El tamaño de una pila
+se suele definir a la hora del inicio del programa, su tamaño depende de determinados facotres , como la arquitectura del ordenador , el lenguaje de programación, cantidad de memoria utilizada.
+Si un programa demanda más memoria de la que hay disponible se produce un desbordamiento de pila, lo que puede provocar que el programa se bloqueé.</p>
+</li>
+<li>
+<p><strong>Heap overflow</strong>: A diferencia de la pila de llamadas, existe lo que se denomina como segmento, es un espacio de memoria que se asigna dinámicamente y que se almacena en variables globales. Este segmento también es igual de vulnerable que el de la &ldquo;pila de llamadas(Stack)&quot;.Con los heaps, los que desarrollan los programas son responsables de reasignar la memoria, si no lo hacen de la forma correcta puede producirse un desbordamiento de pila. Este desbordamiento también puede ocurrir cuando las variables almacenadas contienen más datos que la cantidad de memoria asignada.</p>
+</li>
+</ul>
+<h3 id="diferencias-entre-stack-y-heap">Diferencias entre Stack y Heap</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="kt">void</span> <span class="nf">foo</span><span class="p">(</span><span class="kt">int</span> <span class="n">valor</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">c</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">ptr</span> <span class="o">=</span> <span class="nf">malloc</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">printf</span><span class="p">(</span><span class="s">&#34;Stack: %p | Heap: %p</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">,</span> <span class="n">ptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span><span class="p">(</span><span class="n">valor</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">foo</span><span class="p">(</span><span class="n">valor</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl">  <span class="nf">foo</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/p/bof-introduction/4.png"
+	width="738"
+	height="402"
+	srcset="/p/bof-introduction/4_hu2a5b08977f8c14d14d0107798b26fe9a_135487_480x0_resize_box_3.png 480w, /p/bof-introduction/4_hu2a5b08977f8c14d14d0107798b26fe9a_135487_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="183"
+		data-flex-basis="440px"
+	
+></p>
+<p>La diferencia se ve en que el Stack Overflow el valor va disminuyendo, sin embargo en el Heap Overflow va aumentando.</p>
+<h2 id="prevención">Prevención</h2>
+<ul>
+<li>
+<p><strong>Aleatorización del espacio de direcciones</strong>: Reorganiza de forma aleatoria las ubicaciones del espacio de direcciones de las áreas de datos clave de un proceso, los ataques de Buffer Overflow se suelen centrar en una ubicación exacta del código en cuestión, esta aleatoriedad lo hace casi imposible.</p>
+</li>
+<li>
+<p><strong>Prevención de la ejecucción de datos</strong>: Se pueden marcar áreas de memoria como ejecutables o los que no son ejecutables, lo que también impide esta vulnerabilidad.</p>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/fuzzing/">
+        
+        
+            <div class="article-image">
+                <img src="/p/fuzzing/logo.7cec75911d447ab1499db51feef59629.png" 
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Fuzzing"
+                        data-key="fuzzing" 
+                        data-hash="md5-fOx1kR1EerFJnbUf7vWWKQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Fuzzing</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/enumeracion/">
+        
+        
+            <div class="article-image">
+                <img src="/p/enumeracion/logo.5cdae6a39c2e22f9355c5d090ecac0cb.png" 
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Enumeración"
+                        data-key="enumeracion" 
+                        data-hash="md5-XNrmo5wuIvk1XF0JDsrAyw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Enumeración</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/tratamiento-tty/">
+        
+        
+            <div class="article-image">
+                <img src="/p/tratamiento-tty/logo.1a6af29057ea393a00e83b4edabd589a.png" 
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Tratamiento TTY"
+                        data-key="tratamiento-tty" 
+                        data-hash="md5-GmrykFfqOToA6DtO2r1Ymg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Tratamiento TTY</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/priv-esc-linux/">
+        
+        
+            <div class="article-image">
+                <img src="/p/priv-esc-linux/logo.781b58666bd3edd0f9f2419e22b819d2.png" 
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Privilege Escalation Linux"
+                        data-key="priv-esc-linux" 
+                        data-hash="md5-eBtYZmvT7dD58kGeIrgZ0g==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Privilege Escalation Linux</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2023 S.x1v4n
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
